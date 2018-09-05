@@ -1,0 +1,311 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-section {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.section-search {
+  position: absolute;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+  border: none;
+  max-height: 322px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 350px;
+  background: #000000; 
+}
+
+.section-search ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+.section-search ul li {
+  height: 40px;
+  margin-top: 0px;
+  cursor: pointer;
+  padding-left: 10px;
+  outline: none;
+  padding-right: 15px;
+}
+.section-search ul li img {
+  height:30px;
+  width:30px;
+  float: left;
+  margin-top: 7px ;
+  border-radius: 50%;
+}
+.section-search ul li div span {
+  margin-bottom:0;
+  color:black;
+  font-size:12px;
+  word-wrap:break-word;
+  color:white;
+  margin-right: 8px;
+}
+.section-search ul li div i {
+  color: #c6c6c6;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+
+.verticalScrollBarSearch:hover::-webkit-scrollbar {
+  width: 14px;
+  border-radius: 4px;
+}
+.verticalScrollBarSearch::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 4px;
+}
+.verticalScrollBarSearch::-webkit-scrollbar-track {
+  background-color: black;
+  border-color: white;
+  border-radius: 10px;
+  border: 1px outset white;
+}
+.verticalScrollBarSearch::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  height: 20px;
+  background-color: white;
+}
+
+
+  
+  header {
+    background-color:#000;
+    /* padding: .1rem 2rem; */
+    padding: 0;
+    /* display: none; */
+  }
+  .nav-item {
+    padding: 10px 5px;
+  }
+ 
+  .btn{
+    padding: .3rem .5rem;
+    color: #fff;
+  }
+  .btn:hover{
+    background-color: rgba(109,92,92,0.4);
+  }
+  .btn:focus {
+    box-shadow: none;
+  }
+  .btn i {
+    font-size: 20px;
+  }
+  .btn-map{
+    border: 1px solid #c9ca5b;
+    border-radius: 25px;
+    background: rgba(0,0,0,0.3);
+    max-width: 100px;
+    min-width: 35px;
+  }
+  .btn-map:hover {
+    border: 1px solid #72b02e !important;
+  }
+  .btn-home{
+    background-color: rgba(109,92,92,0.62);
+  }
+  
+  .navbar-search {
+    background-color: rgba(0, 0, 0, 0.61);
+    cursor: pointer;
+    border: 2px solid gray;
+    border-radius: 10px;
+    transition-duration: 0.5s;
+    position: relative;
+    display: table;
+    border-collapse: separate;
+  }
+
+ .navbar-search:focus-within {
+    border: 2px solid #b3c168 !important;
+  }
+
+  .navbar-search-close{
+    width: 1px !important;
+  }
+  .navbar-search-close input {
+      display: none;
+  }
+  .navbar-search-close .search-icon {
+      display: block;
+  }
+
+  .navbar-search input{
+    border: none;
+    background: transparent;
+    color:white;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  }
+  .search-icon {
+    display: table-cell;
+    position: relative;
+    width: 1%;
+    padding: 5px 10px;
+  }
+  .search-icon i {
+    font-size: 20px;
+    vertical-align: middle;
+    color: #fff;
+    margin-bottom: 3px;
+  }
+  .navbar-right{
+    margin-right: 50px;
+  }
+  .dropdown-divider {
+    margin: 0;
+  }
+  @media (min-width: 1401px) {
+    .navbar-search {
+      width: 500px;
+    }
+    .section-search {
+      min-width: 600px;
+    }
+  }
+  @media (max-width: 1400px) {
+    .navbar-search {
+      width: 440px;
+    }
+    .section-search {
+      min-width: 470px;
+    }
+  }
+  @media (max-width: 1200px) {
+    .navbar-search {
+      width: 340px;
+    }
+    .section-search {
+      min-width: 430px;
+    }
+  }
+  @media (max-width: 1100px) {
+    .navbar-search {
+      width: 280px;
+    }
+    .section-search {
+      min-width: 400px;
+    }
+
+  }
+  @media (max-width: 900px) {
+    .navbar-search {
+      width: 250px;
+    }
+    .section-search {
+      min-width: 320px;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .navbar-search, .section-search {
+        margin: 0 2.5%;
+        width: 95%;
+    }
+    
+    .navbar-search-hidden {
+      display: none !important;
+    }
+    .navbar-search-visible {
+        transition-duration: 0.5s;
+        display: block !important;
+    }
+    .navbar-right{
+      margin: 0;
+    }
+    
+  }
+  @media screen and (max-width: 440px) {
+    .nav-item {
+      padding: 5px 2px;
+    }
+  }
+  
+  @media only screen and (min-width: 768px) {
+    .navbar-collapse{
+      position: absolute;
+      right: 0;
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .hide-flech {
+      display: none;
+    }
+    .hide-collapse {
+      display: none;
+    }
+    
+    .dropdown-menu {
+      display:block;
+      position: static;
+      float: none;
+      width: auto;
+      margin-top: 0;
+      background-color: transparent;
+      border: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .dropdown-item {
+      color: #fff;
+    }
+    .dropdown-item:hover{
+      background-color: #353232;
+    }
+   .navbar-collapse{
+      /* background-color: #3C3939; */
+      /* box-shadow: 4px 3px 10px #403333; */
+      width: 100%;
+      height: 100%;
+      /* background-color: rgb(60, 57, 57); */
+      overflow-x: hidden;
+   }
+   .navbar-collapse .nav-link{
+       color: #212529;
+       padding: .25rem 1.5rem;
+       border-bottom: 1px solid #ced4dac9;
+   }
+   
+    .navbar-collapse .nav-link:focus, .navbar-collapse .nav-link:hover {
+        color: #16181b;
+        text-decoration: none;
+        background-color: #f8f9fa;
+    }
+    .navbar-collapse .dropdown-divider{
+      border-top-color: #ced4dac9;
+    }
+    
+  }
+
+  .noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+    supported by Chrome and Opera */
+}
+
+
+  
