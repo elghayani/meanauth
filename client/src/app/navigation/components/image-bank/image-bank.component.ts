@@ -56,5 +56,8 @@ export class ImageBankComponent implements OnInit {
   ngOnDestroy() {
     if(this.subRoute) this.subRoute.unsubscribe();
   }
+  ngOnChanges(){
+    console.log('here')
+  }
 
 }
