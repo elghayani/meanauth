@@ -1,0 +1,113 @@
+.imageBank-container{
+    padding: 0 20px;
+}
+.imageBank-header {
+    position: fixed;
+    z-index: 2;
+}
+  .imageBank-header span{
+      font-family: Comic Sans MS,cursive,sans-serif;
+      font-size: 15px;
+      color:gray;
+  }
+  .imageBank-header strong{
+      text-decoration: underline; 
+      font-family: arial; 
+      font-size: 1.5em; 
+      text-transform: capitalize;
+  }
+  #waterfall {
+      overflow: hidden;
+      list-style:none;
+      padding: 0px;
+      top: 50px;
+  }
+  
+  #waterfall.min {
+      margin: 0;
+  }
+  
+  #waterfall li {
+      /*position: absolute;*/
+      left: 0;
+      top: 0;
+      opacity: 0;
+      z-index: 0;
+      transform: translateY(100px);
+  }
+  
+  #waterfall li:hover {
+      z-index: 1;
+  }
+  
+  #waterfall li.show {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.3s, top 1s;
+  }
+  
+  #waterfall li>div {
+      color: rgba(0, 0, 0, 0.6);
+      
+      font-size: 32px;
+      border-radius: 3px;
+      margin: 5px;
+      /* padding: 15px; */
+      background: rgb(255, 255, 255);
+      border: 1px solid rgba(038, 191, 64, 0);
+      transition: all 0.5s;
+  }
+  
+  #waterfall li>div:hover {
+      transform: translateY(-5px);
+      /* border: 1px solid rgba(65, 58, 58, 0.7); */
+      box-shadow: 0 30px 80px rgba(65, 58, 58, 0.3);
+      transition: all 0.3s;
+  }
+  
+  #waterfall li.min>div {
+      margin: 0;
+      transform: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  #waterfall li.min>div:hover {
+      transform: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  
+  .wf-box > img { 
+      display: block;
+      width: 100%;
+      -webkit-transition: -webkit-transform 0.15s ease 0s;
+      -moz-transition: -moz-transform 0.15s ease 0s;
+      -o-transition: -o-transform 0.15s ease 0s;
+      transition: transform 0.15s ease 0s;
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+  }
+  
+  /* .wf-box:hover > img{
+      -webkit-transform: scale3d(1.1, 1.1, 1.1);
+      transform: scale3d(1.1, 1.1, 1.1);
+  } */
+   
+    
+  .wf-box .content {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 17px;
+      white-space: nowrap;
+      overflow: hidden!important;
+      text-overflow: ellipsis; 
+      color: #000;
+  }
+  
+    

@@ -1,0 +1,87 @@
+.start-animation { 
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position:fixed; top: 0;
+}
+
+#loaderAnimation{
+  position: absolute;
+  bottom: 120px;
+  width: 100%;
+  text-align: center;
+  display: none;
+}
+
+img.one{
+  position: absolute;
+  top: calc( 50% - 25px );
+  right: calc( 50% - 37px ) ;
+  height: 20px;
+  width: 189px;
+}
+
+img.two{
+  position: absolute;
+  top: calc( 50% - 6px );
+  right: calc( 50% - 37px ) ;
+  height: 12px;
+  width: 74px;
+}
+
+
+.animation-image{
+  position: absolute;
+  top: calc( 100% - 222px );
+  right: 0 ;
+  -webkit-transition: right 8s ease,top 8s ease, width 8s ease, height 8s ease, background-image 8s ease, opacity 12s  ease, -webkit-transform 8s ease;
+  transition: right 8s ease, top 8s ease, width 8s ease, height 8s ease, background-image 8s ease,opacity 12s ease,  transform 8s ease;
+  width: 222px;
+  height: 210px;
+}
+
+
+@media (min-width: 768px){
+  img.one{
+    position: absolute;
+    top: calc( 50% - 50px );
+    right: calc( 50% - 74px ) ;
+    height: 40px;
+    width: 378px;
+  }
+
+  img.two{
+    position: absolute;
+    top: calc( 50% - 12px );
+    right: calc( 50% - 74px ) ;
+    height: 24px;
+    width: 148px;
+  }
+  .animation-image{
+    position: absolute;
+    top: calc( 50% - 105px );
+    right: 111px ;
+    -webkit-transition: right 8s ease,top 8s ease, width 8s ease, height 8s ease, background-image 8s ease, opacity 12s  ease, -webkit-transform 8s ease;
+    transition: right 8s ease, top 8s ease, width 8s ease, height 8s ease, background-image 8s ease,opacity 12s ease,  transform 8s ease;
+    width: 222px;
+    height: 210px;
+
+  }
+} 
+.skip-animation{
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  position:fixed;
+}
+.skip-animation > a{
+    color: white;
+}
+
+.skip-animation a:hover, .skip-animation a:focus {
+  font-weight: bold;
+  outline: -webkit-focus-ring-color auto 5px;
+}

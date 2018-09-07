@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { TemplateService } from '../../services/template.service';
+import { SearchService } from '../search.service';
 
 import { Router } from '@angular/router';
 import { FlashMessagesService } from 'angular2-flash-messages';
+//import { HeaderService } from '../../services/header.service';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
-  providers : [TemplateService]
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
+  providers : [SearchService]
 })
-export class NavbarComponent implements OnInit {
+export class HeaderComponent implements OnInit {
 
   searchIsOpen : boolean = false;  
   searchText : string = '';
@@ -20,10 +21,11 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private templateService : TemplateService,
+    private searchService : SearchService,
     private router: Router,
-    private flashMessage: FlashMessagesService) { }
-
+    private flashMessage: FlashMessagesService,
+    /*public headerService : HeaderService*/) {
+     }
   ngOnInit() {
   }
   onLogoutClick() {
@@ -36,7 +38,7 @@ export class NavbarComponent implements OnInit {
   }
   onSearchHandler(){
     if(this.searchText == '') return this.searchResult = [];
-    this.templateService.searchByName(this.searchText).subscribe(data => {
+    this.searchService.searchTemplateByName(this.searchText).subscribe(data => {
       this.searchResult = data;
     });
    
@@ -44,7 +46,6 @@ export class NavbarComponent implements OnInit {
   emptySearch(){
     this.searchResult = [];
     this.searchText   = "";
-    this.searchIsOpen = false;
   }
- 
+
 }

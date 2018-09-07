@@ -1,4 +1,10 @@
-<p>
-  animation works!
-</p>
-
+<div style="position: absolute;top:0;left: 0;z-index: 300;">
+  <div  class="start-animation" 
+        [ngStyle]="{'background-image': 'url(' + img1 + ')'}">
+	    <img [src]="'assets/images/animation/l1.' + ((isWebpSupport) ? 'webp' : 'png')" class="one">
+	    <img [src]="'assets/images/animation/l2.' + ((isWebpSupport) ? 'webp' : 'png')" class="two">
+	    <img class="animation-image" [src]="'assets/images/animation/i1.'+ ((isWebpSupport) ? 'webp' : 'png')"/>
+	</div>
+	<div id="loaderAnimation"></div>
+	<div class="skip-animation"><a (click)='skipAnimation()'>Skip </a></div>
+</div>

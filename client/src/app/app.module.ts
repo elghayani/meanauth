@@ -6,10 +6,8 @@ import {RouterModule} from '@angular/router';
 import { routes } from './app.routes';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
@@ -20,18 +18,21 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard, NotAuthGuard } from './guards/auth.guard';
 import { SearchPipe, SearchOriginPipe } from './pipes/search.pipe';
 import { NavigationModule } from './navigation/navigation.module';
+import { HeaderComponent } from './layouts/header/header.component';
+import { AnimationComponent } from './components/animation/animation.component';
+import { HeaderService } from './layouts/header.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent,
     DashboardComponent,
     ProfileComponent,
     SearchPipe,
-    SearchOriginPipe
+    SearchOriginPipe,
+    HeaderComponent,
+    AnimationComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +46,8 @@ import { NavigationModule } from './navigation/navigation.module';
     ValidateService, 
     AuthService, 
     AuthGuard, 
-    NotAuthGuard
+    NotAuthGuard,
+    HeaderService
   ],
   bootstrap: [AppComponent]
 })

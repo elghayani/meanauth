@@ -1,3 +1,21 @@
-<p>
-  image-bank works!
-</p>
+
+<div class="imageBank-container">
+  <p  class="imageBank-header">
+    <strong> {{title}}</strong>	
+  <span>({{total}} result{{total > 1 ? 's' : ''}})</span>
+  </p>
+
+  <ul id="waterfall">
+  <li *ngFor="let image of images | slice:0:lastIndex ; trackBy: trackByFn">
+    <div  class="wf-box">
+      <img [title]="image.name" [src]="image.url ? pathOfImage+image.url : '/images/imageBank/pomme.png'">
+      <div class="content">
+          <strong>{{image.name}}</strong><br>
+          <small>{{image.artistName}}</small>    
+      </div>
+    </div>
+  </li>
+  </ul>
+</div>
+
+
