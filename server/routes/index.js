@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
 
 router.use('/users', passport.authenticate('jwt', {session:false}), require('./users'));
 router.use('/auth', require('./auth'));
-router.use('/api', require('./templates'));
+router.use('/api/search', require('./search'));
+router.use('/api/imageBank', require('./imageBank'));
 
 module.exports = router;
