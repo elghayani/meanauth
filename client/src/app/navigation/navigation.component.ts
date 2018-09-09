@@ -16,8 +16,8 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe( (params) => {
-      //this.navigationService.currrentId = params['id'];
-      this.navigationService.getEnv(params.id).subscribe(data =>{
+      this.navigationService.currrentId = params['id'];
+      this.navigationService.getEnvironnement(params.id).subscribe(data =>{
         this.navigationService.currrentId = data._id;
         console.log(data)
       })

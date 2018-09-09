@@ -23,7 +23,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(config.JWT_SECRET));
-app.use(cors({credentials: true, origin: 'http://localhost:4200'}));
+app.use(cors({/*credentials: true, origin: 'http://localhost:4200'*/})); 
 
 app.use(session({
   /*genid: () => {

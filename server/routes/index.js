@@ -12,5 +12,6 @@ router.use('/users', passport.authenticate('jwt', {session:false}), require('./u
 router.use('/auth', require('./auth'));
 router.use('/api/search', require('./search'));
 router.use('/api/imageBank', require('./imageBank'));
+router.use('/api/navigation', require('./navigation'));
 
 module.exports = router;
