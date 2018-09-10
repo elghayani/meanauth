@@ -42,14 +42,17 @@ export class ImageBankComponent implements OnInit {
     });
     this.imageBankService.getImages(this.navigationService.currrentId)
     .subscribe(data => {
+      console.log(data)
       this.title = data.name;
-      this.total = data.artworks.length+data.photos.length;
+      this.total = data.total;
+
       data.artworks.map((a)=>a.type = 'artwork');
       data.photos.map((a)=>a.type = 'photo');
       this.images = data.artworks.concat(data.photos);
       this.lastIndex = Math.min(this.capacityToShow,this.total);
+      
     }, err => {
-      console.log(err);
+      console.log(err.json().message);
       return false;
     });
   }

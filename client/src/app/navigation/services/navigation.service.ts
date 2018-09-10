@@ -23,8 +23,11 @@ export class NavigationService {
   constructor(private http : Http) { }
   private pathOfServer = 'http://localhost:3001';
 
-  getEnv(_id){
-    return this.http.get(this.pathOfServer+'/api/navigation/env?id='+_id)
+  getEnvironnement(_id){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', localStorage.id_token)
+    return this.http.get(this.pathOfServer+'/api/navigation/environnement?id='+_id, {headers: headers})
     .map(res => res.json());
   }
   
