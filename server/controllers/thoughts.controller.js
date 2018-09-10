@@ -2,6 +2,16 @@
 const mongoose = require('mongoose');
 const Thought = require('../models/thought');
 
+module.exports.getEnv = function(req, res){
+    let _id = req.query.id;
+    if(_id && mongoose.Types.ObjectId.isValid(_id)){
+        Thought.findById(_id, {name :1}).exec(function(err, data){
+            res.json(data);
+        });
+    }else{
+        return res.status(500).json({success : false, msg: 'url not valid'});;   
+    }
+}
 module.exports.getImages = function(req, res){
      
     let _id = req.query.id;
