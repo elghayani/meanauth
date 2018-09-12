@@ -25,6 +25,7 @@
       <!--/-->
       <!-- name of current page -->
       <li   class="nav-item"  [ngClass]="{'navbar-search-hidden' : searchIsOpen }"
+            [routerLink]= "[{ outlets: { 'v': ['brain']}}]"
             [routerLinkActive]="['active']" 
             [routerLinkActiveOptions] = "{exact:true}">
           <button class="btn btn-md btn-map" >Shangri-La..</button>

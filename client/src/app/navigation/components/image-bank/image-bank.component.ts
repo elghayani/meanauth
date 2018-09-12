@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { ImageBankService } from '../../services/image-bank.service';
@@ -20,6 +20,7 @@ export class ImageBankComponent implements OnInit {
       this.lastIndex += this.capacityToShow;
     }
   }
+  @Input() currentId;
   title   : string = '' ;
   total   : number = 0 ;
   lastIndex : number = 0;
@@ -40,27 +41,25 @@ export class ImageBankComponent implements OnInit {
         width: 170,
         delay: 100,
     });
-    this.imageBankService.getImages(this.navigationService.currrentId)
-    .subscribe(data => {
-      console.log(data)
-      this.title = data.name;
-      this.total = data.total;
-
-      data.artworks.map((a)=>a.type = 'artwork');
-      data.photos.map((a)=>a.type = 'photo');
-      this.images = data.artworks.concat(data.photos);
-      this.lastIndex = Math.min(this.capacityToShow,this.total);
-      
-    }, err => {
-      console.log(err.json().message);
-      return false;
+    this.navigationService.envirement$.subscribe((changed)=>{
+      if(!changed) return;
+      this.imageBankService.getImages(this.navigationService.currrentId)
+      .subscribe(data => {
+        this.title = data.name;
+        this.total = data.artworks.length+data.photos.length;
+        data.artworks.map((a)=>a.type = 'artwork');
+        data.photos.map((a)=>a.type = 'photo');
+        this.images = data.artworks.concat(data.photos);
+        this.lastIndex = Math.min(this.capacityToShow,this.total);
+      }, err => {
+        console.log(err);
+        return false;
+      });
     });
   }
   ngOnDestroy() {
     if(this.subRoute) this.subRoute.unsubscribe();
   }
-  ngOnChanges(){
-    console.log('here')
-  }
+ 
 
 }

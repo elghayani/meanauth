@@ -10,17 +10,20 @@ import { ImageBankComponent } from './components/image-bank/image-bank.component
 import { BrainComponent } from './components/brain/brain.component';
 import { NavigationComponent } from './navigation.component';
 import { NavigationService } from './services/navigation.service';
+import { ConfService } from './services/conf.service';
+import { BrainElementDirective } from './directives/brain-element.directive';
 
 @NgModule({
   declarations: [
     ImageBankComponent,
     BrainComponent,
-    NavigationComponent
+    NavigationComponent,
+    BrainElementDirective
   ],
   imports: [
     BrowserModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes) //
   ],
-  providers: [NavigationService],
+  providers: [NavigationService, ConfService],
 })
 export class NavigationModule { }

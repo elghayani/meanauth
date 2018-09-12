@@ -11,5 +11,17 @@ export const routes : Routes = [
             { path: 'imageBank', component: ImageBankComponent },
             { path: 'brain', component: BrainComponent }
         ]
+    },
+    {
+      path: 'brain', 
+      component: BrainComponent, 
+      outlet: 'v'
     }
 ];
+
+
+// export const routes: Routes =  [
+//     {path:'navigation/:viewName/:id', component: NavigationComponent},
+//     {path: '/auxRoute', component: BrainComponent}
+
+//   ];

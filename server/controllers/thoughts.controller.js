@@ -47,16 +47,19 @@ module.exports.getEnv = function(req, res, next){
         let _id = req.query.id;
         if(_id && mongoose.Types.ObjectId.isValid(_id)){
             Thought.findById(_id, fieldsMain)
+            .populate({ path: 'children', select: 'name' })
+            .populate({ path: 'parents', select: 'name' })
             .exec((err, mainThought) => {
                 if(err) return res.status(err.status).json({message :err.message});
                 if(!mainThought) return res.status(NotFoundError.status).json({message : NotFoundError.message});
                 let result  = {
                     id      : mainThought._id,
                     name    : mainThought.name,
+                    icon : mainThought.images.length>0 ? mainThought.images[0] : '', 
                     owner   : false,
                     origin  : mainThought.origin && mainThought.origin.nameTableOrigin ? mainThought.origin.name : '',
-                    children    : [],
-                    parents     : [],
+                    children    : mainThought.children,
+                    parents     : mainThought.parents,
                     jumps       : [],
                     siblings    : [],
                     totalParents    : 0,
@@ -100,7 +103,6 @@ module.exports.getEnv = function(req, res, next){
                 // } else {
                 //     mainThought.children = [];
                 // }
-                result.children = Thought.find({ _id: { $in: mainThought.children }, active: true }, { fields: fields }).exec();
 
     
                 //console.log(result);

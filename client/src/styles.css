@@ -1,1 +1,1658 @@
 /* You can add global styles to this file, and also import other style files */
+.brainContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 3;
+    overflow: hidden;
+}
+
+.brain{
+  height: 100%;
+  overflow: hidden;
+}
+
+.brainElement{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    min-width: 70px;
+}
+
+.brainElement-leftSection{
+  width: 10%;
+  text-align: center;
+}
+
+.brainElement-rightSection{
+  width: 90%;
+  text-align: center;
+}
+.brainElement-rightSection{
+  width: 90%;
+  text-align: center;
+}
+.brainText{
+  color: white;
+  margin: 0px;
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  max-height: 31px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  line-height: 1.3em;
+  margin-right: 0em;
+  font-weight: bold;
+  vertical-align: middle;
+  font-size: 16px;
+  max-height: 52.24px;
+}
+
+
+
+
+ .brainTextMain{
+  color: white;
+  margin: 0px;
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  max-height: 31px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;  
+  margin-right: 0em;
+  font-weight: bold;
+  vertical-align: middle;
+  font-size: 17px;
+  max-height: 52.24px;
+}
+.brainText-desktop{
+  white-space: nowrap;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 3px;
+  max-height: initial !important;
+}
+span.brainSpana{
+    border-radius: 5px;    
+    display: inline-block;
+}
+span.brainSpanaElement:hover{
+    border: solid 1px;
+    border-color: green;    
+}
+span.brainSpanaElement{
+    background-color: rgba(0, 0, 0, 0.6); 
+    white-space: nowrap;
+}
+@media screen and (max-width: 768px) {
+  .textPBrain{
+    font-size: 15px !important;
+  }
+  span.brainSpanaElement{
+    min-width: 25px;
+    padding: 2px;
+  }
+  .brainText-desktop{
+    white-space: normal;
+  }
+  .addPinsIcon{
+    display: none;
+  }
+  body{
+    overflow-y: hidden; 
+  }
+}
+@media screen and (min-width: 769px) {
+  .prevChild{
+    display: none;
+  }
+  .nextChild{
+    display: none;
+  }
+  .hideDesktop{
+    display: none !important;
+  }
+  span.brainSpanaElement{
+    min-width: 35px;
+    padding: 1px;
+  }
+  .imageCropCart{
+    float:left;
+    margin-left:30px;
+  }
+}
+.brainMainThought {
+    border: solid 1px;
+    border-color: #E83E39;
+    border-radius: 25px;
+    background: rgba(0,0,0,0.3);
+    height: 80%;
+    max-height: 55px;
+    min-width: 52px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.brainMainThought:hover{
+    border-color: green;
+}
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+
+@-webkit-keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+
+}
+
+.zoomIn {
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  to{ 
+    opacity: 0;
+    transform: scale3d(0, 0, 0);  
+  }
+}
+
+.zoomOut {
+  -webkit-animation-name: zoomOut;
+  animation-name: zoomOut;
+}
+
+.BrainSection{
+    background: none transparent;    
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    overflow: hidden;
+    top: 0px;
+    left: 0px;        
+    width:100%;
+    height: 100%;
+    z-index: 0;
+}
+.brain-plus{
+    cursor:pointer;
+    z-index:21;
+    position:absolute;
+    font-size:16px;
+    color:white;
+    font-weight: bold;
+}
+
+.brain-plus:hover{
+  color:#9a8406;
+  font-size: 18px !important;  
+  padding-right: 6px !important;
+}
+
+.form-inputBrain {
+    display: block;
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.btnCloseInput{
+    font-size: 19px;
+    cursor: pointer;
+    color: #929090;
+}
+
+.btnValideInput{
+    font-size: 19px;
+    cursor: pointer;
+    color: #929090;
+}
+
+.btnValideInput:hover{
+  color: #2c962c;
+  font-size: 22px;
+}
+
+.btnCloseInput:hover{
+  color: #af0a0a;
+  font-size: 22px;
+}
+
+
+.container-pbrain-help{
+  position: absolute;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-size: 15px;
+  z-index: 50;
+  background-color: black;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  padding: 6px 8px 8px 4px;
+  border-radius: 3px;
+}
+
+.container-pbrain-help i{
+  font-size: 0.65em;
+  cursor: pointer;
+  padding-right: 3px;
+  position: absolute;
+  top: 1px;
+  right: 0;
+  color: white;
+}
+
+.container-pbrain-help p{
+      width: 150px;
+      margin: 0;
+}
+
+.container-pbrain-help i:hover{
+  color: grey;
+}
+
+.brain-infosBull-wrapper{
+  position:absolute;
+  width : 110px;
+  height : auto;
+  z-index: 50;
+  cursor: pointer;
+}
+
+.buttonEdit{  
+  background-image:  url(https://apple-time.org/images/brain/menuHover.png);
+  position: absolute;
+}
+
+.buttonEdit:hover{
+   background-image: url(https://apple-time.org/images/brain/menu.png) !important;
+}
+
+.menuBrain{
+  z-index:20;
+  position: absolute;
+}
+
+.btnMenuBrain{  
+  min-height: 25px;
+  min-width: 25px;
+  background-repeat: no-repeat;
+  background-size:   contain;
+  background-color:  transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btnChangeViewBrain{  
+  min-height: 25px;
+  min-width: 25px;
+  background-repeat: no-repeat;
+  background-size:   contain;
+  background-color:  transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+.btnTopBrain{
+  margin-top: -21px;
+  margin-left: 0;
+  background-image: url(https://apple-time.org/images/brain/captureHover.png);
+}
+
+.btnBottomViewBrain{
+  position: absolute;
+  margin-top: 22px;
+  margin-left: -7px;
+  background-image: url(https://apple-time.org/images/header/Icon-grid.png);
+}
+
+.btnMiddleViewBrain{
+  margin-left: -20px;
+  background-image: url(https://apple-time.org/images/header/Icon-universe-w.png);
+}
+
+.btnPlusBrain{
+
+}
+
+.buttonCapture{
+  position: absolute;
+  margin-top: -30px;
+  margin-left: -20px;
+  background-image:  url(https://apple-time.org/images/brain/captureHover.png);
+}
+
+.buttonCapture:hover{
+  background-image: url(https://apple-time.org/images/brain/capture.png) !important;
+}
+
+.buttonHideBrain{
+  position: absolute;
+  margin-top: -18px;
+  margin-left: -20px;
+  background-image:  url(https://apple-time.org/images/brain/change-icon-21.png); 
+}
+
+.buttonHideBrainWithMosaic{
+  position: absolute;
+  margin-top: -26px !important;
+  margin-left: 0 !important;  
+  background-image:  url(https://apple-time.org/images/brain/change-icon-21.png); 
+}
+
+.buttonHideBrain:hover{
+  background-image:  url(https://apple-time.org/images/brain/change-icon-20.png); 
+}
+
+.opacityAddThought{
+  opacity: 0.2;
+}
+
+
+
+.imageBrain{
+  cursor: none;
+  margin-left: 2px;
+  vertical-align: middle;
+  padding: 3px;
+  padding-right: 0px;
+  max-width: 22px;
+  max-height: 22px;
+}
+.imageMainBrain{
+  cursor: none;
+  vertical-align: middle;
+  padding: 1px;
+  padding-right: 0px;
+  max-width: 30px;
+  max-height: 30px;
+}
+
+.inputAddBrain{
+  border-radius: 0px;
+  border: 0px;
+  border-radius: 5px;
+  outline: none;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.divAddBrain{
+  text-align: center;
+  position:absolute;
+  z-index:14; 
+}
+
+.navigationHistory{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: 30px;
+  overflow: hidden;
+  right: 0;
+}
+
+.navigationHistory-layout{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-content: flex-start;
+  align-content: flex-start;
+  flex-direction: row-reverse;
+  align-items: center;
+  -webkit-flex-direction: row-reverse;
+  width:98%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.navigationHistory-repeater{
+  cursor: pointer;
+  margin-left:10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width:auto;
+  max-height: 100%;
+  box-shadow: 0 0 2px #fff;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  white-space: nowrap;
+}
+
+.navigationHistory-repeater:hover{
+    background-color: black;
+    border-color: lightgray;
+    color: white;
+}
+
+.nav-histo-item{
+  color: white;
+  display: inline;
+  max-height: 100%;
+  padding: 0;
+
+}
+
+.nav-histo-item:hover{
+  color:white;
+}
+
+.navigationHistory-rightButton{
+  font-size:1.7em;
+  z-index:1;
+  left: 0%;
+  height:100%;
+  position:absolute;
+  top:0;
+  opacity: 0.7;
+}
+
+.navigationHistory-rightButton:hover{
+  opacity: 1;
+}
+
+.navigationHistory-leftButton{
+  font-size:1.7em;
+  z-index:1;
+  position:absolute;
+  right:0.5%;
+  top:0;
+  height:100%;
+  opacity: 0.7;
+}
+
+.navigationHistory-leftButton:hover{
+  opacity: 1;
+}
+
+.navigationHistory-img{
+  border-radius: 10px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin-top: -2px;
+}
+
+
+
+
+/* File Uploader Styles  */
+
+.uploader input {
+  display: none !important;
+}
+
+.uploader {
+  -webkit-align-items: center;
+    align-items: center;
+    background-color: #efefef;
+    background-color: rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    display: -webkit-flex;
+    display: flex;
+    height: 340px;
+    -webkit-justify-content: center;
+    justify-content: center;
+    outline: 3px dashed #ccc;
+    outline-offset: 5px;
+    position: relative;
+    width: 95%;
+    left: 2.5%;
+    top: 2%;
+    margin-bottom: 15px;
+}
+
+.uploader img,
+.uploader .icon {
+  pointer-events: none;
+}
+
+.uploader,
+.uploader .icon {
+  -webkit-transition: all 100ms ease-in;
+  -moz-transition: all 100ms ease-in;
+  -ms-transition: all 100ms ease-in;
+  -o-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+}
+
+.uploader .icon {
+  color: #eee;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 5em;
+}
+
+.uploader img {
+  left: 50%;
+  opacity: 0;
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  top: 50%;
+  -webkit-transition: all 300ms ease-in;
+  -moz-transition: all 300ms ease-in;
+  -ms-transition: all 300ms ease-in;
+  -o-transition: all 300ms ease-in;
+  transition: all 300ms ease-in;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.uploader iframe {
+  left: 50%;
+  opacity: 1;
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  top: 50%;
+  -webkit-transition: all 300ms ease-in;
+  -moz-transition: all 300ms ease-in;
+  -ms-transition: all 300ms ease-in;
+  -o-transition: all 300ms ease-in;
+  transition: all 300ms ease-in;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 15;
+}
+
+.uploader iframe.loaded {
+  opacity: 1;
+  z-index: 15;
+}
+
+.uploader img.loaded {
+  opacity: 1;
+  z-index: 15;
+}
+
+.icon-upload{
+  font-size: 60px;
+  pointer-events: none;
+}
+
+.btnDialog{
+   background-color: #dad6d6;
+}
+
+.btnDialog:hover{
+  box-shadow: 2px 2px 3px #656565;
+  -webkit-box-shadow: 2px 2px 3px #656565;
+  background-color: #e2e2e2;
+  opacity: 0.75;
+}
+
+.btnCancel{
+  color: blue;
+  font-weight: bold;
+}
+
+.btnAddCart{
+  color: white;
+  font-weight: bold;
+  
+}
+
+.containerInputDialog{
+  display:  block;
+}
+
+.in-row{  
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.listAttachement{
+  cursor: pointer;
+  border-bottom: solid 1px;
+}
+
+.listAttachement:hover{
+  background-color: #d2d2d2;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.horizontalElement {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-align: center;
+    background-color:rgba(255,255,255,1);
+}
+
+.childrenScrollBar {
+    width: 50%;
+    bottom: 60px;
+    margin-left: 25%;
+}
+
+.horizontalScrollBar {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    position: absolute;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.horizontalScrollBar::-webkit-scrollbar {
+    height: 5px;
+    border-radius: 4px;
+}
+
+.horizontalScrollBar:hover::-webkit-scrollbar {
+    height: 12px;
+    border-radius: 4px;
+}
+
+
+.horizontalScrollBar::-webkit-scrollbar-track {
+    background-color: black;
+    border-color: white;
+    border-radius: 10px;
+    border: 1px outset white;
+}
+
+.horizontalScrollBar::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    height: 20px;
+    background-color: white;
+}
+
+.jumpsScrollBar {
+    left: 2%;
+    top: 26%;
+    height: 21%;
+}
+
+.siblignsScrollBar{
+    right: 4px;
+    top:20%;
+}
+
+.verticalScrollBar {
+    overflow: auto;
+    position: absolute;
+    height: 20%;
+    width: 4%;
+    cursor: pointer;
+    z-index: 100;    
+}
+
+.verticalScrollBar:hover::-webkit-scrollbar {
+    width: 14px;
+    border-radius: 4px;
+}
+
+.verticalScrollBar::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 4px;
+}
+
+.verticalScrollBar::-webkit-scrollbar-track {
+    background-color: black;
+    border-color: white;
+    border-radius: 10px;
+    border: 1px outset white;
+}
+
+.verticalScrollBar::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    height: 20px;
+    background-color: white;
+}
+
+.verticalElement{
+  width: 100%;
+  height: 100%;
+  color : white;
+  text-align: center;
+  background-color:rgba(255,255,255,0.01);
+}
+
+.ParentsScrollBar{
+  width: 25%;
+  top: 8%;
+  margin-left: 38%;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  background-color: white;
+  max-height: 180px;
+  overflow: auto;
+  border-radius: 4px;
+  z-index: 2000;
+}
+
+#myUL li a {
+    border: 1px solid #ddd; 
+    margin-top: -1px; 
+    background-color: #f6f6f6; 
+    padding: 3px; 
+    text-decoration: none; 
+    font-size: 13px;
+    color: black; 
+    display: block; 
+    
+}
+
+#myUL li a:hover:not(.header) {
+    background-color: #eee; 
+}
+
+.liSearchBrain{
+  cursor: pointer;
+}
+
+.liSearchBrain:hover{
+  background-color: #cccccc !important; 
+}
+
+.imgSearchBrain{
+  max-width: 16px;
+  max-height: 16px;
+  float: right;
+}
+
+.searchListItem{
+  height: 40px;
+  margin-top: 0px;
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+.searchListItem:hover{
+  background-color: #444444 !important;
+}
+
+.imgSearch{
+  max-height        : 30px;
+  max-width         : 30px;
+  float         : left;
+  margin-top    : 7px;
+}
+
+.imgSearch:hover{
+  position: absolute;
+  z-index: 5;
+  max-height        : 100px;
+  max-width         : 100px;
+}
+
+.btnUnlink:hover{
+  opacity: 1;
+
+}
+.btnUnlink{
+  position:absolute;
+  height: 30px;
+  padding: 0;
+  min-width: 90px;
+  padding: 4px;
+  background-color: #000000;
+  border-radius: 7px;
+  opacity: 0.75;
+}
+@-webkit-keyframes pbrainanimate{
+    10% {transform : rotate(5deg)}    
+    20% {transform : rotate(-5deg)}
+    30% {transform : rotate(5deg)}        
+    40% {transform : rotate(-5deg)}
+    50% {transform : rotate(5deg)}        
+    60% {transform : rotate(-5deg)}
+    70% {transform : rotate(5deg)}        
+    80% {transform : rotate(-5deg)}
+    90% {transform : rotate(5deg)}        
+    100% {transform : rotate(0deg)}
+}
+@keyframes pbrainanimate{
+    10% {transform : rotate(5deg)}    
+    20% {transform : rotate(-5deg)}
+    30% {transform : rotate(5deg)}        
+    40% {transform : rotate(-5deg)}
+    50% {transform : rotate(5deg)}        
+    60% {transform : rotate(-5deg)}
+    70% {transform : rotate(5deg)}        
+    80% {transform : rotate(-5deg)}
+    90% {transform : rotate(5deg)}        
+    100% {transform : rotate(0deg)}
+}
+.scaleElement{
+  animation: scaleAnimation 0.5s;
+}
+@keyframes scaleAnimation{
+   15% {transform: scale(1.1)}  
+   25% {transform: scale(1.2)}
+   35%{transform: scale(1.3)}
+   45%{transform: scale(1.4)}
+   50% {transform: scale(1.5)}
+   60% {transform: scale(1.4)}
+   75%{transform: scale(1.3)}   
+   85% {transform: scale(1.2)}
+   95% {transform: scale(1.1)}
+   100% {transform: scale(1)}
+}
+@-webkit-keyframes scaleAnimation{
+   15% {transform: scale(1.1)}  
+   25% {transform: scale(1.2)}
+   35%{transform: scale(1.3)}
+   45%{transform: scale(1.4)}
+   50% {transform: scale(1.5)}
+   60% {transform: scale(1.4)}
+   75%{transform: scale(1.3)}   
+   85% {transform: scale(1.2)}
+   95% {transform: scale(1.1)}
+   100% {transform: scale(1)}
+}
+.btnUploadBrain{
+  background-image: url(https://apple-time.org/images/brain/uploadHover.png); 
+}
+
+.btnUploadBrain:hover{
+  background-image: url(https://apple-time.org/images/brain/upload.png) !important;  
+}
+
+.cartMagento{
+  margin: 9px;
+  color: #d67a24;
+  cursor: pointer;
+}
+
+.cartMagento:hover{
+  color: #d8873d;
+}
+
+.mainSpan{  
+    padding-right : 5px;
+    padding-left  : 5px;
+}
+
+@media screen and (max-width: 1100px) {
+  .brainText {
+    font-size: 12px;
+  }
+  .brainTextMain{
+    font-size: 16px;   
+    height: 65%;
+  }
+  .divMainContainer{
+    height:52px !important;
+  }
+  /*.brainElement{
+      max-height: 35px !important;
+  }*/
+}
+
+@media screen and (max-width: 768px) {
+  .brainText {
+    font-size: 10px;
+  }
+  .brainTextMain{
+    font-size: 14px;
+  }
+  .brainMainThought{
+    padding-right: 3px;
+    padding-left:  3px;
+    /*height: 100%;*/
+  }
+  .brain-plus{
+    margin-top: 5px;
+  }
+  .uploader {   
+      height: 280px;
+      width: 90%;
+      left: 5%;
+      top: 2%;
+      margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .brainText {
+    font-size: 9px;
+  }
+  .brainTextMain{
+    font-size: 11px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .childrenScrollBar {    
+    bottom: 40px;
+  }
+  .brainText {
+    font-size: 10px;
+  }
+  .brainTextMain{
+    font-size: 11px;
+  }
+  .navigationHistory-layout::-webkit-scrollbar {
+    height: 5px;
+    border-radius: 4px;
+  }
+
+  .navigationHistory-layout::-webkit-scrollbar-track {
+      background-color: black;
+      border-color: white;
+      border-radius: 10px;
+      border: 1px outset white;
+  }
+
+  .navigationHistory-layout::-webkit-scrollbar-thumb {
+      border-radius: 20px;
+      height: 20px;
+      background-color: white;
+  }
+
+  .navigationHistory-layout{
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    position: absolute;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  .navigationHistory-rightButton{
+    /*display: none;*/
+  }
+
+  .navigationHistory-leftButton{
+    /*display: none;*/
+  }
+}
+
+@media screen and (min-width: 1101px) {
+  .brainText {
+    font-size: 13px;
+  }
+  .brainTextMain{
+    font-size: 18px;
+  }
+
+  .brainMainThought{
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}
+
+@media screen and (min-width: 1471px) {
+  .brainText {
+    font-size: 15px;
+  }
+
+  .brainTextMain{
+    font-size: 19px;
+  }
+
+  .brainMainThought{
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+}
+@media screen and (min-width: 1701px) {
+  .brainText {
+    font-size: 16px;
+  }
+
+  .brainTextMain{
+    font-size: 20px;    
+  }
+
+  .brainMainThought{
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+}
+
+.brainTextCenter {
+    color: white;
+    margin: 0px;
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    line-height: 1.3em;
+    margin-right: 0em;
+    font-weight: bold;
+    vertical-align: middle;
+    font-size: 17px;
+}
+
+.brainElementCenter{
+    position: absolute;    
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    min-width: 70px;
+    height: 52.24px;
+    top:38%;
+    left: 48%;
+}
+
+.brainCenterThought {
+    border: solid 1px;
+    border-color: #c9ca5b;
+    border-radius: 25px;
+    background: rgba(0,0,0,0.3);    
+    min-width: 52px;
+}
+
+.brainCenterThought:hover{
+    background: rgba(0,0,0,0.5);
+    border-color: green;
+}
+
+
+.tooltipBrain {
+    position: relative;
+}
+
+/* Tooltip text */
+.tooltipBrain .tooltiptextBrain {
+    visibility: hidden;
+    background-color: #2d2c2c;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltipBrain .tooltiptextBrain::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #2d2c2c transparent transparent transparent;
+}
+
+.tooltipBrain:hover .tooltiptextBrain {
+    visibility: visible;
+    opacity: 0.9;
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 12px rgba(255,0,0,0.2);
+    }
+    50% {
+        -webkit-box-shadow: 0 0 12px rgba(255,0,0,0.9);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 12px rgba(2500,0,0,0.2);
+    }
+}
+.brainClick{
+    border-color: transparent !important;
+    -webkit-box-shadow: 0px 0px 12px rgba(255,0,0,0.5);
+    -moz-box-shadow: 0px 0px 12px rgba(255,0,0,0.5);
+    box-shadow: 0px 0px 12px rgba(255,0,0,0.5);
+    -webkit-animation: pulse 0.3s infinite ease-in-out;
+}
+
+.addFriend{
+  color:white;
+  font-size:17px;
+  cursor: pointer;
+}
+.addFriend:hover{
+  color: green;
+  font-size: 18px;
+}
+
+.removeFriend{
+   color:white;
+  font-size:17px;
+  cursor: pointer;
+}
+
+.removeFriend:hover{
+   color: red;
+  font-size: 18px;
+}
+
+.dropingImg{
+  border: dashed 2.4px;
+  border-color: green;
+}
+
+.warnDroping{
+  border: dashed 2.4px;
+  border-color: red;
+}
+
+.selectedElements{
+  border: solid 1px !important;
+  border-color: green !important;
+}
+
+.addPinsIcon{
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+}
+
+.addPinsIcon:hover{  
+  color: black;
+}
+
+.btnMosaic{
+    margin-left: -19px !important;    
+    margin-top: -4px;
+}
+
+.btnAddPicMosaic{
+  margin-left: -16px !important;    
+  margin-top: -10px;
+}
+
+.btnMosaicOnly{
+    margin-top: 15px;
+    margin-left: 5px;
+}
+
+.btnMenuMarg{
+  margin-top: 15px;
+}
+
+.uploadPotosIfNotMosaic{
+    margin-top: 8px;
+    margin-left: -3px;
+}
+
+.menuBrainIfNotMosaic{
+  margin-top: -3px !important;
+}
+
+.imgUploadPhotosItem{
+  border-radius: 50%; height: 32px;width: 32px; margin-right: 7px; cursor: pointer; display: inline-block;
+}
+
+.btnRightClick:hover{
+  opacity: 1;
+
+}
+.btnRightClick{
+  position:absolute;
+  height: 60px;
+  padding: 0;
+  min-width: 90px;
+  padding: 4px;
+  background-color: #000000;
+  border-radius: 7px;
+  opacity: 0.75;
+}
+.divDownLoadImage{
+  border-bottom: 0.3px solid;
+  padding: 3px;
+}
+.divOpenNewTab{
+  float: left;
+  width: 100%;
+  padding: 4px;  
+}
+
+.radioBtnMedal{
+  display: inline-block;
+  text-align: left;
+  margin-right: 45px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .radioBtnMedal{
+    margin-right: 0px !important;
+
+  }
+  .nextChild{
+    position: absolute;
+    right:10px;
+    bottom: 27%;
+    font-size: 60px;
+    color: white;
+    cursor: pointer;
+  }
+  .prevChild{
+    position: absolute;
+    left: 10px;
+    bottom: 27%;
+    font-size: 60px;
+    color: white;
+    cursor: pointer;    
+  }
+  #brainElementInfoBulle{
+    display: none !important;
+  }
+  .brainCenterThought{
+    min-width: 35px;
+    max-width: 100px;
+  }
+  .pinsAndHistoryInBrain{
+    width: calc(100% - 90px) !important;
+  }
+}
+
+.btnImageBank{
+  background-image:  url(https://apple-time.org/images/brain/change-icon-21.png) !important; 
+}
+
+.pinsAndHistoryInBrain{
+  position: absolute;
+  bottom: 45px;
+  width: calc(100% - 130px);
+  left: 75px;
+  z-index: 220;
+}
+
+.pinsAndHistoryInThreed{
+  position: absolute;
+  bottom: 50px;
+  width: 95%;
+  left: 2.5%;
+  z-index: 220;
+}
+
+.menuHideBtn{
+  height:31px;
+  width:31px;
+}
+
+.btnCloseMenu{
+  left: calc(50% + 54px);
+  transition-duration: 0.7s;
+}
+.btnOpenMenu{
+  left: calc(50% + 15px);
+  transition-duration: 0.7s;
+}
+.btnPinsBrain{
+  cursor:pointer;
+  position: absolute;
+  z-index: 3;
+  bottom: 10px;
+  left: calc(50% - 18px);
+}
+@-webkit-keyframes animationClosePinBtn {
+  from {
+    opacity: 1;
+    transform: translate3d(calc(50% - 18px), 0, 0);    
+  }
+  to {
+    transform: translate3d(calc(50% + 15px), 0, 0);
+    opacity: 0;
+  }
+  100% {
+    display: none;
+  }
+}
+
+@-webkit-keyframes animationOpenPinBtn {
+  from {
+    transform: translate3d(calc(50% + 15px), 0, 0);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(calc(50% - 18px), 0, 0);    
+  }
+}
+
+@-webkit-keyframes animationOpenHistoBtn {
+  from {    
+    opacity: 0;
+  }
+  to {
+    opacity: 1;    
+  }
+}
+
+@-webkit-keyframes animationCloseHistoBtn {
+  0% {    
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;    
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.animateCloseBtnBrain {
+  -webkit-animation-name: animationClosePinBtn;
+  animation-name: animationClosePinBtn; 
+}
+
+.animateOpenBtnBrain {
+  -webkit-animation-name: animationOpenPinBtn;
+  animation-name: animationOpenPinBtn;
+}
+
+/*.animateBtnOpenHisto {
+ -webkit-animation-name: animationOpenHistoBtn;
+  animation-name: animationOpenHistoBtn; 
+}
+*/
+/*.animateBtnCloseHisto {
+ -webkit-animation-name: animationCloseHistoBtn;
+  animation-name: animationCloseHistoBtn;
+}
+*/
+
+@font-face {
+  font-family: "NP Naipol All in One";
+  src: url('/fonts/NP Naipol All in One_b.ttf');
+}
+.btnHistoBrain{
+  cursor:pointer;
+  position: absolute;
+  z-index: 150;
+  bottom: 10px;
+  /*left: calc(50% + 15px);*/
+  right: 15px;
+}
+.arrowPins{
+  left: calc(50% - 14.5px);
+}
+.arrowHistory{
+  left: calc(50% + 21px);    
+}
+.arrowHistoPins{
+  position: absolute;
+  z-index: 125;    
+  bottom: 29px;
+  font-size: 20px;  
+  color: black;  
+  transition-duration: 1s;
+}
+@keyframes fadedown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -50%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadedown {
+  animation-name: fadedown;
+}
+.btnBottonBrain{
+  cursor:pointer;
+  position: absolute;
+  z-index  : 3;
+  bottom: 10px;
+}
+@media screen and (max-width: 600px){
+  /*.btnHistoBrain{
+    cursor:pointer;
+    position: absolute;
+    z-index: 6;
+    bottom: 3px;
+    left: calc(42% + 15px);
+  }*/
+  .arrowPins{
+    left: calc(42% - 14.5px);
+  }
+  .arrowHistory{
+    left: calc(42% + 21px);    
+  }
+  .btnCloseMenu{
+    left: calc(42% + 54px);
+    transition-duration: 0.7s;
+  }
+  .btnOpenMenu{
+    left: calc(42% + 15px);
+    transition-duration: 0.7s;
+  }
+  .btnCloseMenu{
+    left: calc(42% + 54px);
+    transition-duration: 0.7s;
+  }
+  .btnOpenMenu{
+    left: calc(42% + 15px);
+    transition-duration: 0.7s;
+  }
+  .btnPinsBrain{
+    cursor:pointer;
+    position: absolute;
+    z-index: 3;
+    bottom: 3px;
+    left: calc(42% - 18px);
+  }
+  .btnBottonBrain{
+    cursor:pointer;
+    position: absolute;
+    z-index  : 3;
+    bottom: 3px;
+  }
+}
+.badgeicon {
+    background-color: #777;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    min-width: 10px;
+    padding: 3px 7px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.splitLeft{
+  position: relative;
+  float: left;
+  width: 50%;
+  float:left;
+}
+
+.splitRight{
+  position: relative;
+  float: right;
+  width: 50%;
+}
+
+#parentContainerIframe{
+    position:absolute;
+    height:100%;
+    margin:0;
+    padding:0;
+    width:100%;
+}
+
+.slideShowIcon{
+   cursor: pointer;
+   opacity: 0.5;
+   vertical-align: middle;
+   font-size: 25px;
+}
+.slideShowIcon:hover{
+  opacity: 1;
+}
+.btnCopierPbrain{
+    outline: 0;
+    border: none;
+    background-color: #c34a39;
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-right: 10%;
+    line-height: 30px;
+    position: absolute;
+    z-index: 2;
+    display: block;
+    left: calc(50% - 35px);
+    top: calc(50% - 13px);
+    padding-right: 14px;
+    padding-left: 14px;
+    border-radius: 4px;
+}
+.textPBrain{
+  font-weight: bold;
+  color: #c34a39;
+  position: absolute;  
+  max-width: 250px;  
+  font-size: 18px;
+}
+.newBtnGenerateMos {
+    position: absolute;    
+    margin-top: -8px;
+    margin-left: -32px;
+    background-image: url(https://apple-time.org/images/brain/captureHover.png);
+}
+
+.newBtnUpload360 {
+  margin-top: -7px;
+  margin-left: -15px;
+}
+
+.newBtnMenu {
+  margin-left: -15px !important;
+  margin-top: 2px;
+}
+
+.buttonEdit{  
+  background-image:  url(https://apple-time.org/images/brain/menuHover.png);
+  position: absolute;
+}
+
+.buttonEdit:hover{
+   background-image: url(https://apple-time.org/images/brain/menu.png) !important;
+}
+
+.btnEditPicture{
+  background-image: url(https://apple-time.org/images/brain/change-icon-21.png);
+}
+
+.btnEditBank{
+  position: absolute;
+  margin-top: -30px;
+  margin-left: -20px;
+  background-image: url(https://apple-time.org/images/brain/uploadHover.png);
+}
+/*.pBrain{
+  height: 75%;
+  top: calc(64px + 10%);
+  width: 90%;
+  left: 5%;
+}*/
