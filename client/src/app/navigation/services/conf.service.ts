@@ -166,6 +166,29 @@ export class ConfService {
     }
   };
 
+  brainCapacity = {
+    parents : {
+      index : 0,
+      limitTo : 4,
+      active : true
+    },
+    children : {
+      index : 0,
+      limitTo : (window.innerWidth > 500) ? 48 : 21,
+      active : true
+    },
+    jumps : {
+      index : 0,
+      limitTo : (window.innerWidth > 500) ? 4 : 2,
+      active : true
+    },
+    siblings : {
+      index : 0,
+      limitTo : (window.innerWidth > 500) ? 4 : 3,
+      active : true
+    },
+  }
+
   constructor() { }
 
   // isValidView = (view)=>{

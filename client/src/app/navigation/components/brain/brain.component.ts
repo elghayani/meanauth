@@ -68,7 +68,7 @@ export class BrainComponent  {
     public siblingsLinksContainer = new createjs.Container();
 
     public brainMode: string ='nav';
-
+    imgToLoad ;
 
     @ViewChild('myCanvas') canvas;
 
@@ -145,23 +145,120 @@ export class BrainComponent  {
         this.stage = new createjs.Stage('brainCanvas');          
         this.confService.returnConf(window.innerWidth, function (conf) {
             this.confBrain = conf;
-            this.thoughts = this.navigationService.currentThought;
+            this.thoughts /*= this.navigationService.currentThought*/ = this.initializeThoughts();
             this.drawBrain();
         }.bind(this));
        });
     }
-    
-    drawBrain() {
-      this.displayedEnv.children = this.returnShownChildren();
-      this.displayedEnv.parents  = this.returnShownParents();
-      this.displayedEnv.siblings = this.returnShownSiblings();
-      this.displayedEnv.jumps = this.returnShownJumps();
+    initializeThoughts() {
+        let thoughts = this.brainService.brainSchema(this.confService.brainCapacity);//this.navigationService.currentThought;
+        thoughts.mainThought = this.navigationService.currentThought.main;
 
-      this.startDrawing();
+        thoughts.children.total = this.navigationService.currentThought.totalChildren;
+        thoughts.parents.total  = this.navigationService.currentThought.totalParents;
+        thoughts.siblings.total = this.navigationService.currentThought.totalSiblings;
+        thoughts.jumps.total    = this.navigationService.currentThought.totalJumps;
+
+        thoughts.children.thoughts  = this.navigationService.currentThought.children.sort(function(a,b) {return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0);} ); ;
+        thoughts.parents.thoughts   = this.navigationService.currentThought.parents.sort(function(a,b) {return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0);} ); ;
+        thoughts.jumps.thoughts     = this.navigationService.currentThought.jumps;
+        thoughts.siblings.thoughts  = this.navigationService.currentThought.siblings;
+
+        console.log(thoughts)
+        //thoughts.parents.subPageCapacity = this.confService.brainCapacity.siblings.limitTO;
+        return thoughts;
+    }
+   
+   
+    calcNewPoint(thought, val){ //!!!!!
+        thought.points.rigth.x =thought.points.top.x + (val / 2)  ;
+        thought.points.left.x = (thought.points.top.x - (val / 2) );
+    }
+
+    mouseEnter(id){
+        let idChoose    = id;   
+        let animated    = [];
+        let tagsLink    = this.registerLinks.filter(function(link){
+            if(idChoose == link.srcId || idChoose == link.dstId || (link.srcId && idChoose == link.srcId) || (link.dstId && idChoose == link.dstId))
+                return true;
+            return false;
+        }.bind(this));
+        for (let i = 0; i < tagsLink.length; i++) {
+            let container = this.getContainerType(tagsLink[i].type);
+            let element   = undefined;
+            if(container) element = container.getChildAt(tagsLink[i].linkId);
+            if(element){
+                animated.push(element);
+            }
+        }
+        this.animatedLinks = animated;
+        this.animateLinks(animated,true);
+    }
+    mouseLeave(){
+        this.animateLinks(this.animatedLinks,false);
+    }
+    mouseOver(event, img){
+        this.eventMouseOut = false;
+        this.showImage($(event.target), img);  
+    }
+    mouseOut(){
+        this.imgToLoad.onload = null;
+        this.eventMouseOut = true;
+        $('#brainElementInfoBulle').remove();
+        $('#brainElementInfoBulleCadre').remove();
+    }
+
+    showImage(parentPos,secondImage){
+        if(typeof widthImage != "number")
+           widthImage = 0;
+        var viewportW = Math.max(document.documentElement.clientWidth, window.innerWidth   || 0);
+        var viewportH = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        var maxHeight = viewportH * 0.3;
+        var maxWidth  = viewportW * 0.3;
+        var re = "\/32\/";
+        var str = "\/500\/";
+        var newstr = secondImage.replace(re, str);
+        this.imgToLoad = new Image();
+        this.imgToLoad.src = newstr;
+        var widthImage = 0;
+        var heightImage = 0;
+        // childNodes
+        this.imgToLoad.onload = function() {
+            widthImage = this.imgToLoad.width;
+            heightImage = this.imgToLoad.height;
+            let top  = parentPos[0].y  - (heightImage/2) - 40;
+            let left = parentPos[0].x - (widthImage/2) - 40;
+            if((top + heightImage) > viewportH){
+                top = viewportH - heightImage - 40;
+            }
+            if(top < 0){
+                top = 0;
+            }
+            if((left + (widthImage/2)) > viewportW){
+                left = viewportW - widthImage - 130;
+            }
+            if(left < 0){
+                left = 0;
+            }
+            $("#brainElementInfoBulle").remove();
+            $("#brainElementInfoBulleCadre").remove();
+
+            var maDiv = '<div id="brainElementInfoBulle" style="position: absolute;overflow:hidden;width:100%;height:100%;z-index:2000;cursor:none;pointer-events:none;'+
+                            'class="brainPopupImage"><img style="position:absolute;max-width:100%; max-height:100%; width:auto; height:auto; top:'+top+'px;'+
+                            'left:'+left+'px;" id="BigImageBrain"  src="'+newstr+'"/></div>';
+            $('body').append(maDiv);
+            if(this.eventMouseOut){
+                $('#brainElementInfoBulle').remove();
+                $('#brainElementInfoBulleCadre').remove();                
+            }
+        }.bind(this);
     }
     
     drawBrainElementCenter(objet, typeElement, row, col) {
         let user ;
+        // if(user && objet.id == user.personalThought && this.cropService.getcropData() !== undefined){
+        //     objet.icon = this.cropService.getcropData();
+        // } //for all thought
         let canvasCoord = this.brainService.canvasCoord(
             this.stage, 
             this.confBrain.staticSectionsMeseaures.main, 
@@ -171,7 +268,7 @@ export class BrainComponent  {
         );
 
       let positionCss = this.brainService.positionCss(canvasCoord);
-      if(this.widthwindow > 768 && this.thoughts.parents.length > 0){
+      if(this.widthwindow > 768 && this.thoughts.parents.total){
         positionCss.bottom.y -= 6;
         positionCss.top.y    += 3;
       }else{
@@ -189,6 +286,11 @@ export class BrainComponent  {
           type           : typeElement//objet.type
       }); 
 
+        //   let node = document.getElementById(typeElement+'-'+objet.id);
+        //   let widthMain = node.offsetWidth;
+        //   this.posThoughts[typeElement][0].points.rigth.x =  this.posThoughts[typeElement][0].points.top.x + (widthMain / 2)  ;
+        //   this.posThoughts[typeElement][0].points.left.x = ( this.posThoughts[typeElement][0].points.top.x - (widthMain / 2) );
+        //   node.style.left = this.posThoughts[typeElement][0].points.left.x+'px';
 
         // if(objet.type == "personal" && objet.owner){
         //     this.drawPlus(positionCss,objet.id,objet);
@@ -234,6 +336,7 @@ export class BrainComponent  {
     }
 
     drawBrainElementChildren(objet, typeElement, row, col, origin) {
+        let icon = (objet.images && objet.images.length>0) ? this.confService.pathOfImages+objet.images[0] : '';
          let indexElement = 0;
         let pos = this.brainService.canvasCoord(
             this.stage, 
@@ -246,7 +349,7 @@ export class BrainComponent  {
         indexElement =  this.posThoughts[typeElement].push({
             thoughtElement : objet._id,
             name : objet.name,
-            icon : '',
+            icon : icon,
             points         : pointsCurrentElement,
             canvasCoord     : pos,
             isSystem       : objet.isSystem,
@@ -255,11 +358,140 @@ export class BrainComponent  {
             type           : typeElement//objet.type
         });
         this.drawChildrenlink(this.posThoughts.main[0],this.posThoughts[typeElement][indexElement - 1]);
+    
+    }
+    drawBrainElementParent(objet, typeElement, row, col, origin){
+        let icon = (objet.images && objet.images.length>0) ? this.confService.pathOfImages+objet.images[0] : '';
+         let indexElement = 0;
+        let pos = this.brainService.canvasCoord(
+            this.stage, 
+            this.confBrain.staticSectionsMeseaures.parents, 
+            this.confBrain.staticSectionsMeseaures.buttonCoef, 
+            col,
+            row
+        );
+        let pointsCurrentElement = this.brainService.positionCss(pos);
+        indexElement =  this.posThoughts[typeElement].push({
+            thoughtElement : objet._id,
+            name : objet.name,
+            icon : icon,
+            points         : pointsCurrentElement,
+            canvasCoord     : pos,
+            isSystem       : objet.isSystem,
+            owner          : objet.owner,
+            id             : objet._id,
+            type           : typeElement//objet.type
+        });
+
+        this.nbParentsDraw ++;
+        this.verifyDrawedParentAndSibligns();
+        this.drawParentLink(this.posThoughts.main[0],this.posThoughts[typeElement][indexElement - 1]);                 
+        
+    }
+    drawBrainElementsibling(objet, typeElement, row, col, origin) {
+        let icon = (objet.images && objet.images.length>0) ? this.confService.pathOfImages+objet.images[0] : '';
+        let pos = this.brainService.canvasCoord(
+           this.stage, 
+           this.confBrain.staticSectionsMeseaures.siblings, 
+           this.confBrain.staticSectionsMeseaures.buttonCoef, 
+           col,
+           row
+       );
+       let pointsCurrentElement = this.brainService.positionCss(pos);
+        let parents = [objet.parent];
+        this.posThoughts[typeElement].push({
+                            thoughtElement        : objet._id,
+                            thoughtParentsElement : parents,
+                            name : objet.name,
+                            canvasCoord     : pos,
+                            icon : icon,
+                            points                : pointsCurrentElement,
+                            isSystem              : objet.isSystem,
+                            owner                 : objet.owner,
+                            id                    : objet._id,
+                            type                  :typeElement// objet.type
+                        });
+        this.nbSibDraw++;
+        this.verifyDrawedParentAndSibligns();
+    }
+    drawBrainElementJump(objet, typeElement, row, col, origin) {
+        console.log(row, col)
+        let indexElement = 0;
+        let user ;//=  <any> Meteor.user();        
+      
+        if (objet.name.length > 0)
+            this.getParamsThought(typeElement, row, col, function (pos) {
+                let pointsCurrentElement;
+                console.log(pos)
+                if (typeElement != "main") {
+                    
+                        pointsCurrentElement = this.calculatePoints(pos.x, pos.y, pos.buttonHeight, pos.buttonWidth, pos.heightStep, pos.widthStep);
+                        indexElement =  this.posThoughts[typeElement].push({
+                                            thoughtElement : (objet._id || objet.id),
+                                            points         : pointsCurrentElement,
+                                            isSystem       : objet.isSystem,
+                                            owner          : objet.owner,
+                                            id             : (objet._id || objet.id),
+                                            type           : objet.type
+                                        });
+                }
+                let classBrain = "brainElement-rightSection ";
+                let stylep = ""
+                let classSpan = " brainSpanaElement";
+                let widthBtn = "width:" + pos.buttonWidth + "px;";
+                let imageHtml = "";
+                let brainClassText = "brainText";
+                let classImage = "imageBrain";
+                let classContainer = '';
+                if (typeElement == "main") {
+                    widthBtn        = "";
+                    classSpan       = "mainSpan";
+                    brainClassText  = "brainTextMain";
+                    classBrain     += "brainMainThought";
+                    classImage      = "imageMainBrain";
+                }
+               
+                let nameThought = "";
+                let tooltip = "";
+                nameThought = objet.name;
+                if (objet.name && objet.name.replace) {
+                    if (typeElement != "main" && nameThought.length > this.maxLengthTextBrain) {
+                        tooltip = `<span class="tooltiptextBrain tooltip-bottom">` + nameThought + `</span>`;
+                        nameThought = nameThought.slice(0, this.maxLengthTextBrain) + "...";
+                    }
+                    else if(typeElement == "main" && nameThought.length > this.maxLengthTextMain){
+                        tooltip = `<span class="tooltiptextBrain tooltip-bottom">` + nameThought + `</span>`;
+                        nameThought = nameThought.slice(0, this.maxLengthTextMain) + "...";
+                    }
+                }
+                nameThought     = $('<div />').text(nameThought).html();
+                let brainButton = $(`<div id="` + typeElement + '-' + objet._id + `" data-placement="left"  node-type="` + typeElement + `" class="brainElement brainCon  animated zoomIn noselect" style="height: ` + pos.buttonHeight + `px; top: ` + pos.y + `px; left: ` + pos.x + `px; ` + widthBtn + `">
+                                        <div class="` + classBrain + ` tooltipBrain" style="width : 100%;">
+                                            <span class="brainSpana ` + classSpan + ` ">
+                                                ` + imageHtml + `
+                                                <p class=" brainText-desktop ` + brainClassText + `" style="` + stylep + `">
+                                                    ` + nameThought + `
+                                                </p>
+                                            </span>
+                                            ` + tooltip + `
+                                        </div>
+                                    </div>`);
+                $('#' + this.containerBrain).append(brainButton);
+                let posMainTopx = this.posThoughts.main[0].points.top.x;
+               if (typeElement == "jumps") {
+                    for (let i = 0; i < this.posThoughts[typeElement].length; i++) {
+                        if (this.posThoughts[typeElement][i].thoughtElement == objet._id) {
+                            this.posThoughts[typeElement][i].points.rigth.x = brainButton[0].offsetLeft + brainButton[0].children[0].children[0].offsetWidth + brainButton[0].children[0].children[0].offsetLeft + 9;
+                            this.drawJumpLink(this.posThoughts[typeElement][i],this.posThoughts.main[0]);
+                        }
+                    }
+                }
+              
+            }.bind(this));
     }
 
     drawCenter() {
-        let mainElement = this.thoughts;
-        //this.drawBrainElement(mainElement, 'main', 0, 0, mainElement.origin);
+        let mainElement = this.thoughts.mainThought;
         this.drawBrainElementCenter(mainElement, 'main', 0, 0)
       }
 
@@ -267,35 +499,56 @@ export class BrainComponent  {
         let jumps = this.displayedEnv.jumps.jumps;
         if (jumps) {
             jumps = jumps[0];
+            console.log(jumps)
             for (let i = 0; i < jumps.length; i++) {
                 if (jumps[i] != 0) {
-                    this.drawBrainElement(jumps[i], 'jumps', i, 0, jumps[i].origin);
+                    this.drawBrainElementJump(jumps[i], 'jumps', i, 0, jumps[i].origin);
                 }
             }
         }
     }
 
     drawSiblings() {
-        let siblings = this.displayedEnv.siblings.siblings;        
+        let siblings = this.displayedEnv.siblings.siblings;  
         siblings = siblings[0];
         for (let i = 0; i < siblings.length; i++) {
             if (siblings[i] != 0) {
-                this.drawBrainElement(siblings[i], 'siblings', i, 0, siblings[i].origin);
+                this.drawBrainElementsibling(siblings[i], 'siblings', i, 0, siblings[i].origin);
             }
         }    
     }
 
 
     drawChildrens() {
-        if (this.displayedEnv && this.displayedEnv.children && this.displayedEnv.children.children) {
-            for (let i = 0; i < this.displayedEnv.children.children.length; i++) {
-                if (this.displayedEnv.children.children[i][0] != 0) {
-                    for (let j = 0; j < this.displayedEnv.children.children[i].length; j++) {
-                        this.drawBrainElementChildren(this.displayedEnv.children.children[i][j], 'children', j, i, this.displayedEnv.children.children[i][j].origin);
-                    }
+        if( this.thoughts.children.matrixBrain){
+            this.thoughts.children.matrixBrain.map((_e, i)=>{
+                if (_e[0] == 0) return;
+                for (let j = 0; j < _e.length; j++) {
+                    this.drawBrainElementChildren(this.thoughts.children.thoughts[_e[j]-1], 'children', j, i,'');
                 }
-            }
+            })
         }
+    }
+    drawParents() {
+        if( this.thoughts.parents.matrixBrain){
+            this.thoughts.parents.matrixBrain.map((_e, i)=>{
+                if (_e[0] == 0) return;
+                for (let j = 0; j < _e.length; j++) {
+                    this.drawBrainElementParent(this.thoughts.parents.thoughts[_e[j]-1], 'parents', j, i,'');
+                }
+            })
+        }
+    }
+
+    drawBrain() {
+        const total = this.thoughts.children.thoughts.length;
+        this.thoughts.children.matrixBrain = this.brainService.childrenMatrixBrain(this.confBrain, total);
+
+        this.thoughts.parents.matrixBrain  = this.brainService.parentsMatrixBrain(this.confBrain, this.thoughts.parents.thoughts.length);
+        this.displayedEnv.siblings = this.returnShownSiblings();
+    //  this.displayedEnv.jumps = this.returnShownJumps();
+
+      this.startDrawing();
     }
 
     drawTheBrain() {
@@ -392,55 +645,19 @@ export class BrainComponent  {
     drawBrainElement(objet, typeElement, row, col, origin) {
         let indexElement = 0;
         let user;// = <any> Meteor.user();        
-        if (typeof objet.name != "string") {
-            objet.name = objet.name.toString();
-        }
-        if (objet.name.length > 0)
+       
             this.getParamsThought(typeElement, row, col, function (pos) {
                 let pointsCurrentElement;
-                if (typeElement != "main") {
-                    if (typeElement == "siblings") {
-                        let parents = [objet.parent];
-                        pointsCurrentElement = this.calculatePoints(pos.x, pos.y, pos.buttonHeight, pos.buttonWidth, pos.heightStep, pos.widthStep);
-                        indexElement =  this.posThoughts[typeElement].push({
-                                            thoughtElement        : objet.id,
-                                            thoughtParentsElement : parents,
-                                            points                : pointsCurrentElement,
-                                            isSystem              : objet.isSystem,
-                                            owner                 : objet.owner,
-                                            id                    : objet.id,
-                                            type                  : objet.type
-                                        });
-                        this.nbSibDraw++;
-                        this.verifyDrawedParentAndSibligns();
-                    } else {
-                        pointsCurrentElement = this.calculatePoints(pos.x, pos.y, pos.buttonHeight, pos.buttonWidth, pos.heightStep, pos.widthStep);
-                        indexElement =  this.posThoughts[typeElement].push({
-                                            thoughtElement : (objet.id || objet.id),
-                                            points         : pointsCurrentElement,
-                                            isSystem       : objet.isSystem,
-                                            owner          : objet.owner,
-                                            id             : (objet.id || objet.id),
-                                            type           : objet.type
-                                        });
-                    }
-                } else {
+                
                     pointsCurrentElement = this.calculatePoints(pos.x, pos.y, pos.buttonHeight, pos.buttonWidth, pos.heightStep, pos.widthStep);
-                    if(this.widthwindow > 768 && this.thoughts.parents.parents.length > 0){
-                        pointsCurrentElement.bottom.y -= 6;
-                        pointsCurrentElement.top.y    += 3;
-                    }else{
-                        pointsCurrentElement.top.y    -= 3;
-                    }
                     indexElement =  this.posThoughts[typeElement].push({
-                                        thoughtElement : objet.id,
+                                        thoughtElement : (objet.id || objet.id),
                                         points         : pointsCurrentElement,
                                         isSystem       : objet.isSystem,
                                         owner          : objet.owner,
-                                        id             : objet.id,
+                                        id             : (objet.id || objet.id),
                                         type           : objet.type
                                     });
-                }
                 let classBrain = "brainElement-rightSection ";
                 let stylep = ""
                 let classSpan = " brainSpanaElement";
@@ -489,177 +706,8 @@ export class BrainComponent  {
                                         </div>
                                     </div>`);
                 $('#' + this.containerBrain).append(brainButton);
-                if(typeElement == "children"){
-                    this.drawChildrenlink(this.posThoughts.main[0],this.posThoughts[typeElement][indexElement - 1]);
-                }else if(typeElement == "parents"){
-                    this.nbParentsDraw ++;
-                    this.verifyDrawedParentAndSibligns();
-                    let posT = this.posThoughts.main[0];
-                    this.drawParentLink(this.posThoughts.main[0],this.posThoughts[typeElement][indexElement - 1]);
-                }                
-                brainButton.click(function (event: any) {
-                    if($(event.target)[0].className.search('brainElement') == -1){
-                        let secondView = this.superpositionService.returnActiveSecondView();
-                        if (secondView == "mosaic"  && !objet.hasmosaic) {
-                            secondView = "hexaBank";
-                        }
-                        if ((secondView == "hexaBank" || secondView == "squareBank" || secondView == "imageBank")  && objet.hasmosaic) {
-                            secondView = "mosaic";
-                        }
-                        if (!secondView) {
-                            secondView = "";
-                        } else {
-                            secondView = "-" + secondView;
-                        }
-                        if (this.brainMode == 'nav'){
-                            let mainThought = this.navigationService.returnThoughts().mainThought;
-                            if(objet.id == mainThought.id){
-                                this.clickInCanvas();
-                            }else{
-                                $(".brainClick").removeClass('brainClick');
-                                $(event.currentTarget).find('span').addClass('brainClick');
-                                this.router.navigate(['/navigation/brain' + secondView + '/' + objet.type + '/' + objet.id]);
-                            }
-                        }
-                    }
-                }.bind(this));
-                if(user){
-                    brainButton.on("dragover", function(event) {
-                        event.preventDefault();  
-                        event.stopPropagation();
-                        if(objet.owner && (!objet.isSystem || objet.id == user.personalThought) ){
-                            brainButton.addClass('dropingImg');
-                        }else{
-                            brainButton.addClass('warnDroping');
-                        }
-                    }.bind(this));
-                    brainButton.on("dragleave", function(event) {
-                        event.preventDefault();  
-                        event.stopPropagation();
-                        brainButton.removeClass('dropingImg warnDroping');
-                    });
-                    // brainButton.on("drop", function(event) {
-                    //     event.preventDefault();
-                    //     event.stopPropagation();
-                    //     brainButton.removeClass('dropingImg warnDroping');
-                    //     if(objet.owner && !objet.isSystem){
-                    //         let files = event.originalEvent.dataTransfer ? event.originalEvent.dataTransfer.files : event.originalEvent.target.files;
-                    //         let url;
-                    //         if(event.originalEvent.dataTransfer && event.originalEvent.dataTransfer.getData('text/html')){
-                    //             let imageUrl = event.originalEvent.dataTransfer.getData('text/html');
-                    //             let rex = /src="?([^"\s]+)"?\s*/;
-                    //             url = rex.exec(imageUrl);
-                    //         }
-                    //         if((url && url[1]) || (files && files.length > 0)){
-                    //             this.config.data.type         = 1;
-                    //             this.config.data.title        = "Upload Photos";
-                    //             this.config.data.accept       = "image/*";
-                    //             this.config.data.store        = "photos";
-                    //             this.config.data.idThought    = objet.id;
-                    //             this.config.data.dataTransfer = event.originalEvent.dataTransfer;
-                    //             let dialogRef = this.dialog.open(UploadAttachement,this.config);
-                    //             dialogRef.afterClosed().subscribe(result => {});
-                    //         }
-                    //     }
-                    // }.bind(this));
-                }
-                brainButton.find('span').mouseenter(function(event){
-                    let idChoose    = objet.id || objet.id;   
-                    let animated    = [];
-                    let tagsLink    = this.registerLinks.filter(function(link){
-                        if(idChoose == link.srcId || idChoose == link.dstId || (link.srcId && idChoose == link.srcId) || (link.dstId && idChoose == link.dstId))
-                            return true;
-                        return false;
-                    }.bind(this));
-                    for (let i = 0; i < tagsLink.length; i++) {
-                        let container = this.getContainerType(tagsLink[i].type);
-                        let element   = undefined;
-                        if(container) element = container.getChildAt(tagsLink[i].linkId);
-                        if(element){
-                            animated.push(element);
-                        }
-                    }
-                    this.animatedLinks = animated;
-                    this.animateLinks(animated,true);
-                }.bind(this));
-
-                brainButton.find('span').mouseleave(function(event){
-                    this.animateLinks(this.animatedLinks,false);
-                }.bind(this));
-
-                if(objet.icon && objet.icon != ""){
-                    brainButton.find("img").mouseover(function(event){
-                        this.eventMouseOut = false;
-                        this.showImage($(event.target),objet.icon);
-                    }.bind(this)).mouseout(function(event){
-                        this.imgToLoad.onload = null;
-                        this.eventMouseOut = true;
-                        $('#brainElementInfoBulle').remove();
-                        $('#brainElementInfoBulleCadre').remove();
-                    }.bind(this));    
-                }
-                let posMainTopx = this.posThoughts.main[0].points.top.x;
-                if (typeElement == "main") {
-                    let xImage = 0;
-                    if (objet.icon && objet.icon != "") {
-                        xImage = 7;
-                    }
-                    let widthMain = 0;
-                    let selectElement = $("#" + typeElement + '-' + objet.id)[0];
-                    if(selectElement)
-                        widthMain = selectElement.offsetWidth;
-                    pointsCurrentElement.rigth.x = this.posThoughts.main[0].points.top.x + (widthMain / 2)  ;
-                    pointsCurrentElement.left.x = (this.posThoughts.main[0].points.top.x - (widthMain / 2) );
-                    brainButton.css({
-                        'left': pointsCurrentElement.left.x + 'px'
-                    });
-                    // $("#main-Click").css({
-                    //     'left': pointsCurrentElement.left.x + 'px',
-                    //     'top' : pos.y
-                    // });
-                    if(objet.type == "personal" && objet.owner){
-                        this.drawPlus(pointsCurrentElement,objet.id,objet);
-                    }
-                    if(objet.type == "public" && user){
-                        
-                        let ifExistPin = user.pins.filter( (element) => {
-                            return (element.id_thought == objet.id);
-                        });
-
-                        if(ifExistPin.length > 0){
-                            this.notInPins = false;
-                        }else{
-                            this.notInPins = true;
-                        }
-                    }else{
-                        this.notInPins = false;
-                    }
-                    if (objet.icon && objet.icon != "" && this.widthwindow > 500) {
-                        let image = new Image();
-                        image.src = objet.icon;
-                        console.log(pointsCurrentElement);
-                        //  if()
-                        this.changePosMenu(pointsCurrentElement.rigth,objet.name,objet.owner,objet.isSystem,objet.icon,user && (objet.id == user.personalThought),pointsCurrentElement.left);
-                        image.onload = function(image){
-                            let objetThought = $("#" + typeElement + '-' + objet.id)[0];
-                            if(objetThought){
-                                let widthMain                = objetThought.offsetWidth;
-                                pointsCurrentElement.rigth.x = this.posThoughts.main[0].points.top.x + (widthMain / 2);
-                                pointsCurrentElement.left.x  = (this.posThoughts.main[0].points.top.x - (widthMain / 2));
-                                brainButton.css({
-                                    'left': pointsCurrentElement.left.x + 'px'
-                                });
-                                $(".brain-plus").remove();
-                                if(objet.type == "personal" && objet.owner){
-                                    this.drawPlus(pointsCurrentElement,objet.id,objet);
-                                }
-                                // this.drawJumps();
-                                this.changePosMenu(pointsCurrentElement.rigth,objet.name,objet.owner,objet.isSystem,objet.icon,user && (objet.id == user.personalThought),pointsCurrentElement.left);
-                            }
-                        }.bind(this);
-                    }
-                    this.changePosMenu(pointsCurrentElement.rigth,objet.name,objet.owner,objet.isSystem,objet.icon,user && (objet.id == user.personalThought),pointsCurrentElement.left);
-                } else if (typeElement == "jumps") {
+                
+                if (typeElement == "jumps") {
                     for (let i = 0; i < this.posThoughts[typeElement].length; i++) {
                         if (this.posThoughts[typeElement][i].thoughtElement == objet.id) {
                             this.posThoughts[typeElement][i].points.rigth.x = brainButton[0].offsetLeft + brainButton[0].children[0].children[0].offsetWidth + brainButton[0].children[0].children[0].offsetLeft + 9;
@@ -667,135 +715,7 @@ export class BrainComponent  {
                         }
                     }
                 }
-                if (typeElement == 'main' && this.brainMode == 'add') {
-                    let Elementtop = $(brainButton)[0].offsetTop;
-                    let elementLeft = $(brainButton)[0].offsetLeft;
-                    let top = Elementtop - 54;
-                    let left = elementLeft + 50 + $(brainButton)[0].offsetWidth / 2;
-                    let bottom = window.innerHeight - $(brainButton)[0].offsetTop - 10;
-                    let right = window.innerWidth - $(brainButton)[0].offsetLeft - 5 + 50;
-                    let rightText = 100;
-                    if(window.innerWidth < 700){
-                        rightText = -265;
-                    }
-                    let nameBtn = this.navigationService.getStatePbrain();
-                    let styleBtn = "";
-                    
-                    if (this.addBrainConf.crop) {
-                        let image = this.addBrainConf.data ? this.addBrainConf.data : (this.confService.returnImagesPath()+ this.addBrainConf.dataSelection[0].image.replace('1000','250'));
-                        if(nameBtn == "déplacer"){
-                            styleBtn =  "left: calc(50% - 21px);";
-                        }else{
-                            styleBtn = "left: calc(50% - 17px);";
-                        }
-                         var wrapper =                            
-                            '<p class="textPBrain" id="textPbrain" style="bottom : ' + (bottom + 40) + 'px; right:' + (right + rightText) + 'px;">Choose a thought on your map and click on ' + nameBtn + '</p>' +
-                            '<div id="brain-infosBull-wrapperID" class="brain-infosBull-wrapper " style="bottom : ' + bottom + 'px; right:' + right + 'px;" >' +
-                            '<img src = "' + image  + '" style="width: 150px;position:relative;top:0;display:block; padding: 10px;"/>' +
-                            '<button style="' + styleBtn + '" class="btnCopierPbrain">' + nameBtn + '</button>' +
-                            // '<img id="image-calc-Id" src = "/images/brain/send-to.png" style="width:105px;position:absolute;top:0;"/>' +
-                            // '<img id="pbrainFleche" src="/images/brain/send-to-fleche.png" style="position:fixed;display:none;transform: rotate(-20deg);bottom : ' + (bottom + 50) + 'px;right : ' + right + 'px;"' +
-                            '</div>';
-                    } else {
-                        if(nameBtn == "déplacer"){
-                            styleBtn =  "left: calc(50% - 43px);";
-                        }else{
-                            styleBtn = "left: calc(50% - 35px);";
-                        }
-                        if(this.addBrainConf.selection){
-                            var images = '';
-                            
-                            for(let i=1,j=3;i<this.addBrainConf.dataSelection.length && i<4;i++,j+=3){
-                                images += '<img class="" src = "' +this.confService.returnImagesPath() + this.addBrainConf.dataSelection[i].image + '" style="height : 130px; width:100px;position:absolute;top:'+j+'px;left:'+j+'px;display:block;"/>';
-                            }                            
-
-                            let sendToImage = '/images/brain/send-to-photos.png';
-                            if(objet.origin == 'friends')
-                                sendToImage = '/images/brain/send-to-photos-friends.png';
-                            
-                            var wrapper =
-                                '<p class="textPBrain" id="textPbrain" style="bottom : ' + (bottom + 40) + 'px; right:' + (right + rightText) + 'px;">Choose a thought on your map and click on ' + nameBtn + '</p>' +                                
-                                '<div id="brain-infosBull-wrapperID" class="brain-infosBull-wrapper" style="bottom : ' + bottom + 'px; right:' + right + 'px;width: auto;" >' +
-                                '<img class="" src = "' +this.confService.returnImagesPath() + this.addBrainConf.dataSelection[0].image + '" style="height : 130px; width:100px;position:relative;top:0;display:block;"/>' +
-                                '<button style="' + styleBtn + '" class="btnCopierPbrain">' + nameBtn + '</button>' +
-                                // '<img id="send-to-photos" src="'+sendToImage+'" style=" width:60px;height:auto;position:absolute;z-index:2;display:block;left: calc(50% - 31px);top: calc(50% - 46px);" />' +
-                                // '<img id="pbrainFleche" src="/images/brain/send-to-fleche.png" style="position:fixed;display:none;transform: rotate(-20deg);bottom : ' + (bottom + 65) + 'px;right : ' + right + 'px;"/>' +
-                                images +
-                                '</div>';       
-                        }
-                    }
-                    $('#' + this.containerBrain).append(wrapper);
-                    $('.pbrainAnimate').css('animation', 'pbrainanimate 0.7s');
-                    let wrapperHeight = this.addBrainConf.crop ? 100 : 130;
-                    
-                    let rightToAdd = (window.innerWidth-$(brainButton)[0].offsetLeft ) -($(brainButton)[0].offsetWidth/2) ;
-                    this.pbrainAnnimation = setInterval(() => {
-                        $('#pbrainFleche').css('transform',' rotate(-20deg)');
-                        $('.pbrainAnimate').css('animation', '');
-                        $('#pbrainFleche').css({ 'bottom': (bottom + wrapperHeight/2) + 'px', 'right': right + 'px'});
-                        $('#pbrainFleche').fadeIn();
-                        $('#pbrainFleche').animate({
-                            bottom: bottom-30+'px',
-                            right:   rightToAdd +'px',
-                        }, {
-                                duration: 1000,
-                                specialEasing: {bottom: 'easeInQuad', right: 'easeOutQuad'},
-                                progress : ( animation,  progress, remainingMs)=>{                                    
-                                    if(progress > 0.3 && progress < 0.39)
-                                        $('#pbrainFleche').css('transform',' rotate(5deg)');
-                                    else if(progress > 0.4 && progress < 0.49)
-                                        $('#pbrainFleche').css('transform',' rotate(10deg)');
-                                    else if(progress > 0.5 && progress < 0.59)
-                                        $('#pbrainFleche').css('transform',' rotate(20deg)');
-                                    else if(progress > 0.6 && progress < 0.69)
-                                        $('#pbrainFleche').css('transform',' rotate(30deg)');
-                                    else if(progress > 0.7 && progress < 0.79)
-                                        $('#pbrainFleche').css('transform',' rotate(40deg)');
-                                    else if(progress > 0.8 )
-                                        $('#pbrainFleche').css('transform',' rotate(50deg)');
-                                },
-                                complete:  ()=> {
-                                    $(brainButton).css('animation','scaleAnimation 0.5s');
-                                    $('#pbrainFleche').css('display', 'none');
-                                    $('#pbrainFleche').css('transform',' rotate(-20deg)');
-                                    
-                                    $('.pbrainAnimate').css('animation', 'pbrainanimate 0.7s');
-                                    setTimeout(function() {
-                                        $(brainButton).css('animation','none');                   
-                                    },500);
-                                }
-                            });
-                    }, 2200);
-                    $('#brain-infosBull-wrapperID').on('mouseover', function (event) {
-                        if (this.addBrainConf.crop)
-                            $('#image-calc-Id').attr('src', '/images/brain/send-to-valid.png');                            
-                        else{
-                             if(objet.origin == 'friends' )
-                                $('#send-to-photos').attr('src', '/images/brain/send-to-photos-valid-friends.png');
-                             else 
-                                $('#send-to-photos').attr('src', '/images/brain/send-to-photos-valid.png');         
-                        }
-                    }.bind(this));
-
-                    $('#brain-infosBull-wrapperID').on('mouseout', function (event) {
-                        if (this.addBrainConf.crop)
-                            $('#image-calc-Id').attr('src', '/images/brain/send-to.png');                            
-                        else{
-                             if(objet.origin == 'friends' )
-                                $('#send-to-photos').attr('src', '/images/brain/send-to-photos-friends.png');
-                             else 
-                                $('#send-to-photos').attr('src', '/images/brain/send-to-photos.png');         
-                        }
-                    }.bind(this));
-
-                    $('#closeBtn').on('click', function (event) {
-                        $('.container-pbrain-help').remove();
-                    }.bind(this));
-
-                    $('#brain-infosBull-wrapperID').on('click', function (event) {
-                        this.savePBrainContent(objet);
-                    }.bind(this));
-                }
+              
             }.bind(this));
     }
 
@@ -817,89 +737,22 @@ export class BrainComponent  {
     }
 
 
-    returnShownChildren() {
-        let children;
-        let childrenState;
-        children = this.navigationService.returnDisplayedChildren(this.thoughts);
-        childrenState = this.navigationService.getBlocState("children");
-        let cl, ll, len = children.length;
-        let ch = [
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            []
-        ];
-        if (len == 0) {
-            cl = 0;
-            ll = 0;
-        } else {
-            let cfg = this.confBrain.staticSectionsMeseaures.children.drawingPattern;
-            ch = JSON.parse(JSON.stringify(cfg[0].matrix.slice()));
-            cl = cfg[0].col;
-            for (let i = 1; i < cfg.length; i++) {
-                if (cfg[i].cond != -1 && len <= cfg[i].cond) {
-                    ch = JSON.parse(JSON.stringify(cfg[i].matrix.slice()));
-                    cl = cfg[i].col;
-                    i = cfg.length;
-                }
-            }
-            ll = Math.ceil(len / cl);
-        }
-
-        for (let i = 0, k = 0; i < ch.length; i++) {
-            if (ch[i].length == 0) {
-                for (let j = 0; j < ll; j += 1) {
-                    if (k < children.length) {
-                        ch[i].push(children[k]);
-                        k += 1;
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-        return {
-            children: ch,
-            index: childrenState.index,
-            capacity: childrenState.capacity,
-            totalLength: childrenState.total
-        }
-    }
-
     returnShownSiblings() {
         let pars;
-        let nbActiveS = 0;
-        pars = this.navigationService.returnDisplayedParents(this.thoughts);
-        let stateSib = this.navigationService.getBlocState('siblings');
+        pars = this.thoughts.siblings.thoughts;
         let sbls = [];
+        let nbr = pars.map(e=>{return nbr+= e.children.length});
+        console.log(nbr)
         pars.forEach(function (doc) {
             if (doc.children) {
                 sbls = sbls.concat(doc.children);                
                 doc.children.forEach(function (child) {
-                    child.parent = doc;
+                    child.parent = {_id:doc._idT};
                 });
             }
         });
-        let sbsNoSiblings = sbls.filter( (obj) => {
-            if (this.oldShownSiblings)
-                return (this.oldShownSiblings.map(function (e) {
-                    return e.id;
-                }).indexOf(obj.id) == -1);
-            else
-                return [];
-        });
-        this.oldShownSiblings = this.oldShownSiblings.concat(sbsNoSiblings);
-        sbls = sbls.slice((stateSib.index * stateSib.capacity),((stateSib.index+1) * stateSib.capacity) );
-        nbActiveS = sbls.length;
+        
+        let nbActiveS = sbls.length;
         let emptyness = this.confBrain.staticSectionsMeseaures.siblings.nodesCapacity - sbls.length;
         let diff;
         let temp;
@@ -915,12 +768,10 @@ export class BrainComponent  {
             sbls = temp;
         }
         sbls = [sbls];
+        console.log(sbls)
         return {
             siblings: sbls,
-            index: stateSib.index,
-            capacity: stateSib.capacity,
-            totalLength: stateSib.total,
-            nbActiveS : nbActiveS
+            nbActiveS:nbActiveS
         };
     }
     
@@ -953,59 +804,8 @@ export class BrainComponent  {
             totalLength: jumpsState.total
         }
     }
-
-    returnShownParents() {
-        let par, parState;
-        par = this.navigationService.returnDisplayedParents(this.thoughts);
-        parState = this.navigationService.getBlocState("parents");
-
-        let cl, ll, len = par.length;
-        let ch = [
-            [],
-            [],
-            []
-        ];
-        if (len == 0) {
-            cl = 0;
-            ll = 0;
-        } else {
-            let cfg = this.confBrain.staticSectionsMeseaures.parents.drawingPattern;
-            ch = JSON.parse(JSON.stringify(cfg[0].matrix.slice()));
-            cl = cfg[0].col;
-            for (let i = 1; i < cfg.length; i++) {
-                if (cfg[i].cond != -1 && len == cfg[i].cond) {
-                    ch = JSON.parse(JSON.stringify(cfg[i].matrix.slice()));
-                    cl = cfg[i].col;
-                    i = cfg.length;
-                }
-            }
-            ll = Math.ceil(len / cl);
-        }
-
-        for (let i = 0, k = 0; i < ch.length; i++) {
-            if (ch[i].length == 0) {
-                for (let j = 0; j < ll; j += 1) {
-                    if (k < par.length) {
-                        ch[i].push(par[k]);
-                        k += 1;
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return {
-            parents: ch,
-            index: parState.index,
-            capacity: parState.capacity,
-            totalLength: parState.total,
-            nbActiveP: par.length
-        };
-    }
     
     drawChildrenlink(posThoughtsMain, posThoughtsChildren){
-        let ch = this.displayedEnv.children.children;
         let mainDiv = $('[node-type="main"]')[0];
         if (this.posThoughts && this.posThoughts.main && this.posThoughts.main.length > 0 && mainDiv) {
             posThoughtsMain.points.left.x = mainDiv.offsetLeft - 5;
@@ -1024,7 +824,9 @@ export class BrainComponent  {
         let point2 = this.drawPoint(posThoughtsChildren.points.top.x, posThoughtsChildren.points.top.y, 2, this.colorLinks);
         this.childrenLinksContainer.addChild(point1);
         this.childrenLinksContainer.addChild(point2);
+       // console.log(this.childrenLinksContainer)
         this.childrenLinksContainer.on("mouseover", function (event: any) {
+            console.log('here')
             this.mouseOverUnlink = event.target.unlink ? {typeLink: event.target.typeLink, srcId: event.target.srcId, dstId: event.target.dstId, dstType: event.target.dstType } : false;
             $('#children-' + event.target.dstId + ' > div.brainElement-rightSection > span').addClass('selectedElements');
             $('#main-' + event.target.srcId + ' > div.brainElement-rightSection ').addClass('selectedElements');
@@ -1120,18 +922,7 @@ export class BrainComponent  {
         return ret;
     }
 
-    drawParents() {
-        let parents = this.displayedEnv.parents.parents;
-        if (parents) {
-            for (let i = 0; i < parents.length; i++) {
-                if (parents[i][0] != 0) {
-                    for (let j = 0; j < parents[i].length; j++) {
-                        this.drawBrainElement(parents[i][j], 'parents', j, i, parents[i][j].origin);
-                    }
-                }
-            }
-        }
-    }
+   
 
     drawParentLink(posThoughtsMain,posThoughtsParent) {
         let P1, P2, linkIndex;        
@@ -1323,7 +1114,7 @@ export class BrainComponent  {
     drawSiblingsLink() {
         let P1, P2, linkIndex;
         for (let i = 0; i < this.posThoughts.siblings.length; i++) {
-            let posParents = this.recupPosParents(this.posThoughts.siblings[i].thoughtParentsElement[0].id);            
+            let posParents = this.recupPosParents(this.posThoughts.siblings[i].thoughtParentsElement[0]._id);            
             if (posParents) {
                 P1 = {
                     x: posParents.points.bottom.x,
@@ -1462,7 +1253,7 @@ export class BrainComponent  {
           heightStep : infos.scrollSquadTop * screenHeight / 100,
           buttonWidth : (infos.width * screenWidth / 100) * vendor.buttonCoef,
           buttonHeight : (screenWidth < 1100 && screenWidth > 767) ? 51 : infos.height * screenHeight / 100
-        };          
+        };        
         callback(pos);     
       }
       if(this.confBrain == null){
@@ -1474,42 +1265,11 @@ export class BrainComponent  {
           handleParamsThought(type,row, col,callback);
       }
   }
-
-  getWidthOfBloc(type,callback){
-    var handleParamsThought = (type,callback) => {
-        let infos = null;
-        let vendor = this.confBrain.staticSectionsMeseaures;
-        if(type     == "main"){
-          infos = vendor.main;
-        }else if(type == "parents"){
-          infos = vendor.parents;
-        }else if(type == "children"){
-          infos = vendor.children;
-        }else if(type == "jumps"){
-          infos = vendor.jumps;
-        }else if(type == "sibligns"){
-          infos = vendor.sibligns;
-        }else{
-          infos = {};
-        }
-        let screenWidth  = window.innerWidth;
-        let screenHeight = window.innerHeight;
-        let widthStep = (infos.scrollSquadLeft * screenWidth / 100);
-        callback(widthStep);     
-      }
-      if(this.confBrain == null){
-          this.confService.returnConf(window.innerWidth,function(result){
-            this.confBrain = result;
-            handleParamsThought(type,callback);
-          });
-      }else{
-          handleParamsThought(type,callback);
-      }
-  }
   verifyDrawedParentAndSibligns(){
-    if(this.nbParentsDraw == this.displayedEnv.parents.nbActiveP  && this.nbSibDraw == this.displayedEnv.siblings.nbActiveS){            
+    if(this.nbParentsDraw == this.thoughts.parents.thoughts.length  && this.nbSibDraw == this.displayedEnv.siblings.nbActiveS){            
         this.drawSiblingsLink();
         this.stage.update();
+        console.log('here')
     }
   }
 

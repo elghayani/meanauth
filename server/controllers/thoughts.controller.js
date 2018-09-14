@@ -44,68 +44,89 @@ function acessPermission(accessLevel, user, owner) {
 module.exports.getEnv = function(req, res, next){
     passport.authenticate('jwt', function(err, user) {
         if(err) return res.status(err.status).json({message :err.message});
-        let _id = req.query.id;
+        let _id = req.body._id;
+        let capacity = req.body.capacity;
+        //console.log(req.body)
         if(_id && mongoose.Types.ObjectId.isValid(_id)){
             Thought.findById(_id, fieldsMain)
-            .populate({ path: 'children', select: 'name' })
-            .populate({ path: 'parents', select: 'name' })
+            .populate({ 
+                path: 'children', 
+                match: {active:true},
+                select: 'name images' 
+            })
+            .populate({ 
+                path: 'jumps', 
+                match: {active:true},
+                select: 'name images' 
+            })
+            .populate({ 
+                path: 'parents', 
+                match: {active:true}, 
+                select: 'name images children',
+                populate : { 
+                    path : 'children', 
+                    match: {active:true}, 
+                    // options: { 
+                    //     skip  :  capacity.siblings.index,
+                    //     limit : capacity.siblings.limitTo 
+                    // }, 
+                    select :'name images'
+                } 
+            })
+            // .slice('children', capacity.children.index, capacity.children.limitTo)
+            // .slice('jumps',    capacity.jumps.index, capacity.jumps.limitTo)
+            // .slice('parents',  capacity.parents.index, capacity.parents.limitTo)
             .exec((err, mainThought) => {
                 if(err) return res.status(err.status).json({message :err.message});
                 if(!mainThought) return res.status(NotFoundError.status).json({message : NotFoundError.message});
+                //console.log(mainThought)
                 let result  = {
-                    id      : mainThought._id,
-                    name    : mainThought.name,
-                    icon : mainThought.images.length>0 ? mainThought.images[0] : '', 
-                    owner   : false,
-                    origin  : mainThought.origin && mainThought.origin.nameTableOrigin ? mainThought.origin.name : '',
-                    children    : mainThought.children,
-                    parents     : mainThought.parents,
-                    jumps       : [],
+                    main : {
+                        id      : mainThought._id,
+                        name    : mainThought.name,
+                        icon    : mainThought.images.length>0 ? mainThought.images[0] : '', 
+                        owner   : false,
+                        origin  : mainThought.origin && mainThought.origin.nameTableOrigin ? mainThought.origin.name : '',
+                    
+                    },
+
+                    children    : capacity.children.active ? mainThought.children.slice(capacity.children.index, capacity.children.limitTo) : [],
+                    parents     : capacity.parents.active ? mainThought.parents.slice(capacity.parents.index, capacity.parents.limitTo) :[],
                     siblings    : [],
-                    totalParents    : 0,
-                    totalSiblings   : 0,
-                    totalChildren   : 0,
-                    totalJumps      : 0
+                    jumps       : capacity.jumps.active ? mainThought.jumps.slice(capacity.jumps.index, capacity.jumps.limitTo) : [],
+                    
+                    totalChildren   :  mainThought.children.length,
+                    totalParents    :  mainThought.parents.length,
+                    totalSiblings   :  0,
+                    totalJumps      :  mainThought.jumps.length,
                     
                 };
-                if( result.origin == "users" && acessPermission(mainThought.perm_developp.accesLevel, user, mainThought.owner)){
+                if( result.main.origin == "users" && acessPermission(mainThought.perm_developp.accesLevel, user, mainThought.owner)){
         			// if (!ifYouHavePermission) {
         			// 	capacity = capacityPrivateUser(capacity);
         			// 	mainThought.hasmosaic = false;
         			// 	mainThought.hasliveMosaic = false;				
         			// }
                 }
-                result.owner = Boolean(mainThought.owner == "cw49wax68qbvm5d7J") ;
-                // if ( capacity.children.needs > 0 && mainThought.children && mainThought.children.length > 0) {
-                //     result.totalChildren = mainThought.children.length;
-                //     mainThought.children = mainThought.children.slice(capacity.children.index, capacity.children.needs);
-                   
-                //     let children = vendor.find({ _id: { $in: mainThought.children }, active: true }, { fields: fields }).fetch();
-                //     if(capacity.cropChildren.needs > 0){
-                //         for (var i = 0; i < mainThought.children.length; i++) {
-                //             if(mainThought.children[i].crops){
-                //                 mainThought.children[i].crops = mainThought.children[i].crops.slice(capacity.cropChildren.jumps, capacity.cropChildren.needs);
-                //                 mainThought.children[i].crops = PersoFileCrop.find({ _id: { $in: mainThought.children[i].crops }}, { sort: { 'created': 1 }, fields: { name: 1, url : 1, dzurl: 1, origin: 1, created: 1, sentCrop : 1, sentTo : 1 } }).fetch();	
-                //             }else{
-                //                 mainThought.children[i].crops = [];
-                //             }
-                //         }	
-                //     }
-                //     if (vendor._name == thoughts._name) {
-                //         for (var i = 0; i < mainThought.children.length; i++) {
-                //             if (mainThought.children[i].owner == user._id) {
-                //                 mainThought.children[i].owner = true;
-                //             } else {
-                //                 mainThought.children[i].owner = false;
-                //             }
-                //         }
-                //     }
-                // } else {
-                //     mainThought.children = [];
-                // }
+                result.main.owner = Boolean(mainThought.owner == "cw49wax68qbvm5d7J") ;
+                if(capacity.siblings.active){
+                    let nbrSibligns = 0;
+                    mainThought.parents.map((parent)=>{
+                        let child = parent.children.splice(capacity.siblings.index, capacity.siblings.limitTo-nbrSibligns);  
+                        // child.forEach(e => {
+                        //     e.idParent = parent._id;
+                        //     console.log(e)
+                        // });
+                        //console.log(child)
 
-    
-                //console.log(result);
+                        result.siblings.push({_idT : parent._id , total : parent.children.length, children : child});
+                        //result.siblings = result.siblings.concat(child);
+                        nbrSibligns+=parent.children.length;
+                        // parent.children = parent.children.slice(capacity.siblings.index, capacity.siblings.limitTo-nbrSibligns);    
+                        parent.children = undefined;
+                    });
+                    result.totalSiblings = nbrSibligns;
+                }
                 return res.json(result);
             });
         } else{

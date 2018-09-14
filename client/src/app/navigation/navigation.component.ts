@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from './services/navigation.service';
-import { ConfService } from './services/conf.service';
 
 @Component({
   selector: 'app-navigation',
@@ -12,7 +11,6 @@ export class NavigationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private navigationService : NavigationService,
-    private configService : ConfService
   ) { }
 
   ngOnInit() {

@@ -92,40 +92,4 @@ export class BrainElementDirective {
       node.style.left = this.element.points.left.x+'px';
     }
   }
-
-//   brainButton.find('span').mouseenter(function(event){
-//     let idChoose    = objet.id || objet.id;   
-//     let animated    = [];
-//     let tagsLink    = this.registerLinks.filter(function(link){
-//         if(idChoose == link.srcId || idChoose == link.dstId || (link.srcId && idChoose == link.srcId) || (link.dstId && idChoose == link.dstId))
-//             return true;
-//         return false;
-//     }.bind(this));
-//     for (let i = 0; i < tagsLink.length; i++) {
-//         let container = this.getContainerType(tagsLink[i].type);
-//         let element   = undefined;
-//         if(container) element = container.getChildAt(tagsLink[i].linkId);
-//         if(element){
-//             animated.push(element);
-//         }
-//     }
-//     this.animatedLinks = animated;
-//     this.animateLinks(animated,true);
-// }.bind(this));
-
-// brainButton.find('span').mouseleave(function(event){
-//     this.animateLinks(this.animatedLinks,false);
-// }.bind(this));
-
-// if(objet.icon && objet.icon != ""){
-//   brainButton.find("img").mouseover(function(event){
-//       this.eventMouseOut = false;
-//       this.showImage($(event.target),objet.icon);
-//   }.bind(this)).mouseout(function(event){
-//       this.eventMouseOut = true;
-//       $('#brainElementInfoBulle').remove();
-//       $('#brainElementInfoBulleCadre').remove();
-//   }.bind(this));    
-// }
-  
 }

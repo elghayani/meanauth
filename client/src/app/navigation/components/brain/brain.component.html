@@ -10,44 +10,75 @@ height: 100%;">
 </div> -->
 
 
-<div id="BrainSection" class="animated zoomIn BrainSection noselect" [ngClass]="{'pBrain' : (brainMode == 'add')}">
+<div id="BrainSection" class="animated zoomIn BrainSection noselect">
   <button type="button"
   (click)="close()"
-  class="close btn-lg" aria-label="Close" style="margin: 10px">
+    class="close btn-lg" aria-label="Close" 
+    style="margin:10px;position:relative;color: white;cursor: pointer;margin-top: 64px;z-index: 1;">
   <span aria-hidden="true">&times;</span>
-</button>
+  </button>
   <canvas #myCanvas (window:resize)="resizeBrain($event)" 
           style="background-color:black;opacity: 0.7;position: absolute;" 
           canvasSize id="brainCanvas" 
           class="brain">
   </canvas>
   <div id="BrainContainer"></div>
-    <div *ngIf="posThoughts.main.length+posThoughts.children.length>0">
-      <div *ngFor="let th of posThoughts.main.concat(posThoughts.children)">
-        <div  id="{{th.type}}-{{th.id}}" 
-              data-placement="left" 
-              class="brainElement brainCon  animated zoomIn noselect"
-              [ngStyle] ="{ 'height':th.canvasCoord.buttonHeight+'px',
-                            'top':th.canvasCoord.y+'px',
-                            'left':th.canvasCoord.x+'px',
-                            'width': th.type =='main' ? th.canvasCoord.buttonWidth+'px' :'' }"
-            >
-          <div class="'brainElement-rightSection tooltipBrain" style="width:100%"
-              [ngClass]="th.type =='main' ? 'brainMainThought' :''">
-              
-          </div>
-        </div>
-        <!-- 
-          let content = document.createElement('span');
-    content.className = 'brainSpana';
-    if(this.element.type == 'main'){
-      content.classList.add('mainSpan');
-    } else{
-      content.classList.add('brainSpanaElement');
-    }
-          <div appBrainElement [element]="th"></div> -->
+  <!-- main thought -->
+  <div  *ngFor="let th of posThoughts.main">
+      <!-- {{calcNewPoint(th,brain.offsetWidth)}} -->
+    <div #brain id="{{th.type}}-{{th.id}}" data-placement="left" node-type="main"
+          class="brainElement brainCon animated zoomIn noselect"
+          [ngStyle] ="{ 'height':th.canvasCoord.buttonHeight+'px',
+                    'top':th.canvasCoord.y+'px'}"
+          [style.left]="th.points.left.x+'px'">
+      <div  class="brainElement-rightSection tooltipBrain brainMainThought" style="width:100%"  
+            [title]="th.name">
+        <span class="brainSpana mainSpan" 
+             (mouseenter) ="mouseEnter(th.id)"  (mouseleave) ="mouseLeave(th.id)">
+          <img  *ngIf="th.icon !== '' && stage.width > 500" 
+                [src]="th.icon"
+                (mouseover)="mouseOver($event,th.icon)"
+                (mouseout)="mouseOut()"
+                class="imageMainBrain">
+          <p class="brainText-desktop brainTextMain" 
+              [ngStyle]="{'padding-right':th.icon!='' ? '1px' :''}">
+              {{ th.name | slice:0:maxLengthTextMain}}<i *ngIf="th.name.length>maxLengthTextMain">...</i>
+          </p>
+        </span>
+      </div>    
+  </div>
+  <!-- children thought-->
+  <div *ngFor="let th of posThoughts.children.concat(posThoughts.parents, posThoughts.siblings)">
+    <div  id="{{th.type}}-{{th.id}}" 
+          data-placement="left" 
+          class="brainElement brainCon  animated zoomIn noselect"
+          [ngStyle] ="{ 'height':th.canvasCoord.buttonHeight+'px',
+                        'top':th.canvasCoord.y+'px',
+                        'left':th.canvasCoord.x+'px',
+                        'width': th.canvasCoord.buttonWidth+'px' }"
+        >
+      <div  class="brainElement-rightSection tooltipBrain" 
+            style="width:100%"  [title]="th.name">
+          <span class="brainSpana brainSpanaElement"
+                (mouseenter) ="mouseEnter(th.id)"  (mouseleave) ="mouseLeave(th.id)">
+              <img  *ngIf="th.icon !== '' && stage.width > 500" 
+                    [src]="th.icon"
+                    (mouseover)="mouseOver($event,th.icon)"
+                    (mouseout)="mouseOut()"
+                    class="imageBrain">
+              <p  class="brainText-desktop brainText"
+                [ngStyle]="{'padding-right':th.icon!='' ? '1px' :''}">
+                {{ th.name | slice:0:maxLengthTextBrain }}<i *ngIf="th.name.length>maxLengthTextBrain">...</i>
+              </p>
+          </span>
       </div>
     </div>
+  </div>
+    <!--
+          <div *ngIf="posThoughts.children.length>0">
+            <div appBrainElement [element]="th"></div>
+          </div>
+    -->
 </div>
 
 
