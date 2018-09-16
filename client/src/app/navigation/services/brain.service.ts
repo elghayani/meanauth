@@ -120,40 +120,38 @@ export class BrainService {
         return matrixBrain;
      
     }
-    siblignsMatrixBrain(conf, siblings){
-        let matrixBrain : any = [];
-       let sbls = [];
-        
-       siblings.forEach(function (doc) {
-            if (doc.children) {
-                sbls = sbls.concat(doc.children);                
-                doc.children.forEach(function (child) {
-                    child.parent = {_id:doc._idT};
-                });
-            }
-        });
-        
-        let nbActiveS = sbls.length;
-        let emptyness = conf.staticSectionsMeseaures.siblings.nodesCapacity - sbls.length;
-        let diff;
-        let temp;
+    jumpsMatrixBrain(total, capacity){
+        let matrixBrain = [];
+        let emptyness = capacity - total;
         if (emptyness > 0) {
-            diff = Math.ceil(emptyness / 2);
-            temp = [];
+            let diff = Math.ceil(emptyness / 2);
             for (let i = 0; i < diff; i++) {
-                temp.push(0);
+                matrixBrain.push(0);
             }
-            for (let i = 0; i < sbls.length; i++) {
-                temp.push(sbls[i]);
+
+            for (let i = 0; i < total; i++) {
+                matrixBrain.push(i+1);
             }
-            sbls = temp;
         }
-        sbls = [sbls];
-        console.log(sbls.length)
-        return {
-            siblings: sbls,
-            nbActiveS:nbActiveS
-        };
+       return matrixBrain;
+    }
+    siblignsMatrixBrain(conf, siblings){
+        let nbr = 0;
+        siblings.map(e=>{return nbr+= e.children.length});
+        let nbActiveS = nbr;
+        let emptyness = conf.staticSectionsMeseaures.siblings.nodesCapacity - nbr;
+        let diff = Math.ceil(emptyness / 2);
+        if (emptyness > 0) {
+            let i=diff;
+            siblings.map(e=> {
+                e.children.map(_e=> {
+                    _e.col = i;
+                    _e.idParent = e._idT;
+                    i++;
+                })
+            })
+        }
+       return nbActiveS;
     }
 
 }

@@ -90,10 +90,10 @@ module.exports.getEnv = function(req, res, next){
                     
                     },
 
-                    children    : capacity.children.active ? mainThought.children.slice(capacity.children.index, capacity.children.limitTo) : [],
-                    parents     : capacity.parents.active ? mainThought.parents.slice(capacity.parents.index, capacity.parents.limitTo) :[],
+                    children    : capacity.children.active ? mainThought.children.splice(capacity.children.index, capacity.children.limitTo) : [],
+                    parents     : capacity.parents.active ? mainThought.parents.splice(capacity.parents.index, capacity.parents.limitTo) :[],
                     siblings    : [],
-                    jumps       : capacity.jumps.active ? mainThought.jumps.slice(capacity.jumps.index, capacity.jumps.limitTo) : [],
+                    jumps       : capacity.jumps.active ? mainThought.jumps.splice(capacity.jumps.index, capacity.jumps.limitTo) : [],
                     
                     totalChildren   :  mainThought.children.length,
                     totalParents    :  mainThought.parents.length,
@@ -111,8 +111,8 @@ module.exports.getEnv = function(req, res, next){
                 result.main.owner = Boolean(mainThought.owner == "cw49wax68qbvm5d7J") ;
                 if(capacity.siblings.active){
                     let nbrSibligns = 0;
-                    mainThought.parents.map((parent)=>{
-                        let child = parent.children.splice(capacity.siblings.index, capacity.siblings.limitTo-nbrSibligns);  
+                    result.parents.map((parent)=>{
+                        let child = parent.children.filter(e => { return e._id.toString() !== mainThought._id.toString()}).splice(capacity.siblings.index, capacity.siblings.limitTo-nbrSibligns);  
                         // child.forEach(e => {
                         //     e.idParent = parent._id;
                         //     console.log(e)
